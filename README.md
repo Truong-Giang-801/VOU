@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # ⚔️ QUIZ QUEST 🐱
 
@@ -51,3 +52,7 @@ As well as completing the tasks provided in the brief, I spent some time designi
 Trivia API: [https://opentdb.com/api_config.php](https://opentdb.com/api_config.php)
 
 
+=======
+# VOU
+Marketing with Real-time Games
+>>>>>>> 1af4f0c2b7d740dfd3197064b25ea158157b1ffd
