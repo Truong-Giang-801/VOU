@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Vou.Services.BrandAPI.props" />
+</Project>

@@ -1,0 +1,6 @@
+@Vou.Services.BrandAPI_HostAddress = http://localhost:5089
+
+GET {{Vou.Services.BrandAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

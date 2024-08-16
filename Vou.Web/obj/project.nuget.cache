@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "QRSNEhmkPac=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\giang\\OneDrive\\Desktop\\Admin\\VouAdmin\\Vou.Web\\Vou.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\giang\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
