@@ -6,7 +6,7 @@
 		public string Name { get; set; } = string.Empty;
 		public string GPS { get; set; } = string.Empty;
 		public string Industry { get; set; } = string.Empty;
-		public DateTime DateCreated { get; set; } = DateTime.Now;
-		public DateTime DateUpdated { get; set; }
+		public DateTime DateCreated { get; set; } 
+		public DateTime DateUpdated { get; set; } 
 	}
 }

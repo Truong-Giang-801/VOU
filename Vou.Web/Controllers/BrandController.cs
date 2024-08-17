@@ -45,6 +45,8 @@ namespace Vou.Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				model.DateCreated = DateTime.Now;
+				model.DateUpdated = DateTime.Now;
 				ResponseDto? response = await _BrandService.CreateBrandAsync(model);
 
 				if (response != null && response.IsSuccess == true)
@@ -75,26 +77,31 @@ namespace Vou.Web.Controllers
             return NotFound();
         }
 
-		[HttpPost]
-		public async Task<IActionResult> BrandUpdate(BrandDto model)
-		{
-			if (ModelState.IsValid)
-			{
-				ResponseDto? response = await _BrandService.UpdateBrandAsync(model);
+        [HttpPost]
+        public async Task<IActionResult> BrandUpdate( BrandDto model)
+        {
+            if (ModelState.IsValid)
+            {
+				DateTime? date = model.DateCreated;
+				Console.WriteLine(date);
+                model.DateUpdated = DateTime.Now;
+                ResponseDto? response = await _BrandService.UpdateBrandAsync(model);
+				model.DateCreated = (DateTime)date;
+                if (response != null && response.IsSuccess == true)
+                {
+                    TempData["success"] = "Brand updated successfully";
+                    return RedirectToAction(nameof(BrandIndex));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+            }
+            return View(model);
+        }
 
-				if (response != null && response.IsSuccess == true)
-				{
-					TempData["success"] = "Brand updated successfully";
-					return RedirectToAction(nameof(BrandIndex));
-				}
-				else
-				{
-					TempData["error"] = response?.Message;
-				}
-			}
-			return View(model);
-		}
-		public async Task<IActionResult> BrandDelete(int Id)
+
+        public async Task<IActionResult> BrandDelete(int Id)
 		{
 			ResponseDto? response = await _BrandService.GetBrandByIdAsync(Id);
 

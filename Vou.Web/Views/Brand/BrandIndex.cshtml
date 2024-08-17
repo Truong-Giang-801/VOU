@@ -33,6 +33,9 @@
 					<th>
 						Day Created
 					</th>
+					<th>
+						Day Updated
+					</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -51,6 +54,9 @@
 						</td>
 						<td>
 							@item.DateCreated
+						</td>
+						<td>
+							@item.DateUpdated
 						</td>
 						<td>
 							<a asp-action="BrandUpdate" asp-route-Id="@item.Id" class="btn btn-danger">

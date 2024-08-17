@@ -12,7 +12,7 @@ namespace Vou.Services.BrandAPI.Models
 		public string GPS { get; set; } = string.Empty;
 		[Required]
 		public string Industry { get; set; } = string.Empty;
-		public DateTime DateCreated { get; set; } = DateTime.Now;
+		public DateTime DateCreated { get; set; } 
 		public DateTime DateUpdated { get; set; } 
 	}
 }
