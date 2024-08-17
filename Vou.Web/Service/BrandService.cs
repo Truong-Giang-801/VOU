@@ -27,12 +27,24 @@ namespace Vou.Web.Service
 
 		public async Task<ResponseDto?> DeleteBrandAsync(int id)
 		{
-			return await _baseService.SendAsync(new RequestDto()
-			{
-				ApiType = Ultility.SD.ApiType.DELETE,
-				Url = SD.BrandAPIBase + "/api/brand"+id
-			});
-		}
+            //return await _baseService.SendAsync(new RequestDto()
+            //{
+            //	ApiType = Ultility.SD.ApiType.DELETE,
+            //	Url = SD.BrandAPIBase + "/api/brand/"+id
+            //});
+            var request = new RequestDto()
+            {
+                ApiType = Ultility.SD.ApiType.DELETE,
+                Url = SD.BrandAPIBase + "/api/brand/" + id
+            };
+
+            var response = await _baseService.SendAsync(request);
+
+            // Log the raw response
+            Console.WriteLine("Raw API response: " + response?.Result);
+
+            return response;
+        }
 
 		public async Task<ResponseDto?> GetAllBrandAsync()
 		{
@@ -48,7 +60,7 @@ namespace Vou.Web.Service
 			return await _baseService.SendAsync(new RequestDto()
 			{
 				ApiType = Ultility.SD.ApiType.GET,
-				Url = SD.BrandAPIBase + "/api/brand" + id
+				Url = SD.BrandAPIBase + "/api/brand/" + id
 			});
 		}
 
@@ -58,7 +70,7 @@ namespace Vou.Web.Service
 			{
 				ApiType = Ultility.SD.ApiType.PUT,
 				Data = brandDto,
-				Url = SD.BrandAPIBase + "/api/brand"
+				Url = SD.BrandAPIBase + "/api/brand/" + brandDto.Id
 			});
 		}
 	}

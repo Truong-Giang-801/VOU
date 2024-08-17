@@ -59,10 +59,44 @@ namespace Vou.Web.Controllers
 			}
 			return View(model);
 		}
-
-		public async Task<IActionResult> BrandDelete(int BrandId)
+		public async Task<IActionResult> BrandUpdate(int Id)
 		{
-			ResponseDto? response = await _BrandService.GetBrandByIdAsync(BrandId);
+            ResponseDto? response = await _BrandService.GetBrandByIdAsync(Id);
+
+            if (response != null && response.IsSuccess == true)
+            {
+                BrandDto? model = JsonConvert.DeserializeObject<BrandDto>(Convert.ToString(response.Result));
+                return View(model);
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return NotFound();
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> BrandUpdate(BrandDto model)
+		{
+			if (ModelState.IsValid)
+			{
+				ResponseDto? response = await _BrandService.UpdateBrandAsync(model);
+
+				if (response != null && response.IsSuccess == true)
+				{
+					TempData["success"] = "Brand updated successfully";
+					return RedirectToAction(nameof(BrandIndex));
+				}
+				else
+				{
+					TempData["error"] = response?.Message;
+				}
+			}
+			return View(model);
+		}
+		public async Task<IActionResult> BrandDelete(int Id)
+		{
+			ResponseDto? response = await _BrandService.GetBrandByIdAsync(Id);
 
 			if (response != null && response.IsSuccess == true)
 			{

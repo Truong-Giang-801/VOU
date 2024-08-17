@@ -74,7 +74,8 @@ namespace Vou.Services.BrandAPI.Controllers
 			return _responeDto;
 		}
 		[HttpPut]
-		public ResponeDto Put([FromBody] BrandDto brandDto)
+        [Route("{id:int}")]
+        public ResponeDto Put([FromBody] BrandDto brandDto)
 		{
 			try
 			{
@@ -93,7 +94,8 @@ namespace Vou.Services.BrandAPI.Controllers
 		}
 
 		[HttpDelete]
-		public ResponeDto Delete(int id)
+        [Route("{id:int}")]
+        public ResponeDto Delete(int id)
 		{
 			try
 			{

@@ -1,0 +1,51 @@
+﻿@model Vou.Web.Models.Dto.BrandDto
+
+<form asp-action="BrandCreate">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-white text-center">Create Brand</h1>
+
+        <hr />
+        <div class="row">
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;"> Name</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Industry</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Industry" class="form-control" />
+                <span asp-validation-for="Industry" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">GPS (AB:CD)</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="GPS" class="form-control" />
+                <span asp-validation-for="GPS" class="text-danger"></span>
+            </div>
+
+            <div class="col-5 offset-2">
+
+                <a asp-action="BrandIndex" class="btn-primary btn form-control ">Back to List</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Create" class="btn btn-success form-control" />
+
+            </div>
+
+        </div>
+
+        <div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
