@@ -1,0 +1,6 @@
+@Vou.Services.AuthAPI_HostAddress = http://localhost:5218
+
+GET {{Vou.Services.AuthAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "W3R2A74FmYwSHm5wgw+KeqRSJcidQl7Go1NRAZmncP4=",
+  "Source": "Vou.Services.AuthAPI",
+  "BasePath": "_content/Vou.Services.AuthAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
