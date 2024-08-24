@@ -11,17 +11,38 @@ namespace Vou.Services.AuthAPI.Service
         private readonly AppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AuthService(AppDbContext appDbContext, UserManager<ApplicationUser> userManager,
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        public AuthService(AppDbContext appDbContext, UserManager<ApplicationUser> userManager, IJwtTokenGenerator jwtTokenGenerator,
             RoleManager<IdentityRole> roleManager)
         {
             _db = appDbContext;
             _userManager = userManager;
             _roleManager = roleManager;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        public async Task<LoginResponeDto> LoginResponeDto(LoginRequestDto loginRequestDto)
+        public async Task<LoginResponeDto> Login(LoginRequestDto loginRequestDto)
         {
-            throw new NotImplementedException();
+            var user = _db.ApplicationUsers.FirstOrDefault(u=>u.UserName.ToLower() == loginRequestDto.Username.ToLower());
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+            if (isValid == false || user == null)
+            {
+                return new LoginResponeDto() { User = null, Token = "" };
+            }
+            var _jwtToken = _jwtTokenGenerator.GenerateToken(user);
+            UserDto userDto = new UserDto()
+            {
+                Email = user.Email,
+                Id = user.Id,
+                Name = user.Name,
+                PhoneNumber = user.PhoneNumber
+            };
+            var result = new LoginResponeDto()
+            {
+                User = userDto,
+                Token = _jwtToken,
+            };
+              return result;
         }
 
         public async Task<string> Register(RegistrationRequestDto registrationRequestDto)

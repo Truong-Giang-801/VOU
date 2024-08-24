@@ -35,9 +35,17 @@ namespace Vou.Services.AuthAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
-            return Ok();
+            var loginRespone = await _iAuthService.Login(loginRequestDto);
+            if (loginRespone.User == null) { 
+                _responeDto.IsSuccess= false;
+                _responeDto.Message = "Username or password is incorrect";
+                return BadRequest(_responeDto);
+            }
+            _responeDto.Result = loginRespone;
+            _responeDto.Message = "Login successful";
+            return Ok(_responeDto);
         }
 
     }
