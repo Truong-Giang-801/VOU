@@ -1,4 +1,4 @@
-﻿namespace Vou.Services.AuthAPI.Models.Dto
+﻿namespace Vou.Web.Models
 {
     public class RegistrationRequestDto
     {

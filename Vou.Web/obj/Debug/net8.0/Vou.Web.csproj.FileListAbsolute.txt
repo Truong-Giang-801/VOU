@@ -102,3 +102,13 @@ C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\obj\Debug\net8.0\refint\V
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\obj\Debug\net8.0\Vou.Web.pdb
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\obj\Debug\net8.0\Vou.Web.genruntimeconfig.cache
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\obj\Debug\net8.0\ref\Vou.Web.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Web\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

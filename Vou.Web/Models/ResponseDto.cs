@@ -1,6 +1,7 @@
-﻿namespace Vou.Web.Models.Dto
+﻿namespace Vou.Web.Models
+
 {
-	public class ResponseDto
+    public class ResponseDto
 	{
 		public object? Result { get; set; }
 		public bool? IsSuccess { get; set; } = true;

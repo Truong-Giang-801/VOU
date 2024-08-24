@@ -9,10 +9,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<IBrandService, BrandService>();
+builder.Services.AddHttpClient<IAuthService, AuthService>();
 SD.BrandAPIBase = builder.Configuration["ServiceUrl:BrandAPI"];
+SD.AuthAPIBase = builder.Configuration["ServiceUrl:AuthAPI"];
 
 builder.Services.AddScoped<IBrandService, BrandService>();
-builder.Services.AddScoped<IBaseService, BaseService>();	
+builder.Services.AddScoped<IBaseService, BaseService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

@@ -47,6 +47,19 @@ namespace Vou.Services.AuthAPI.Controllers
             _responeDto.Message = "Login successful";
             return Ok(_responeDto);
         }
+        [HttpPost("assignRole")]
+        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto registrationRequestDto)
+        {
+            var assignRoleSuccessful = await _iAuthService.AssignRole(registrationRequestDto.Email, registrationRequestDto.RoleName.ToUpper());
+            if (!assignRoleSuccessful)
+            {
+                _responeDto.IsSuccess = false;
+                _responeDto.Message = "Error encounter at assign role";
+                return BadRequest(_responeDto);
+            }
+
+            return Ok(_responeDto);
+        }
 
     }
 }
