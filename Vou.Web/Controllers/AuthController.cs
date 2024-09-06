@@ -14,9 +14,11 @@ namespace Vou.Web.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly ITokenProvider _tokenProvider;
+        public AuthController(IAuthService authService, ITokenProvider tokenProvider)
         {
             _authService = authService;
+            _tokenProvider = tokenProvider;
         }
         [HttpGet]
         public IActionResult Login()
@@ -31,7 +33,10 @@ namespace Vou.Web.Controllers
 
             if (responseDto != null && responseDto.IsSuccess == true)
             {
-                LoginResponeDto loginResponeDto = JsonConvert.DeserializeObject<LoginResponeDto>(Convert.ToString(responseDto.Result));  
+                LoginResponeDto loginResponeDto = JsonConvert.DeserializeObject<LoginResponeDto>
+                    (Convert.ToString(responseDto.Result));
+                await SigninUser(loginResponeDto);
+                _tokenProvider.SetToken(loginResponeDto.Token);
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -48,7 +53,6 @@ namespace Vou.Web.Controllers
             var roleList = new List<SelectListItem>()
             {
                 new SelectListItem{Text=SD.RoleAdmin,Value=SD.RoleAdmin},
-                new SelectListItem{Text=SD.RoleUser,Value=SD.RoleUser},
                 new SelectListItem{Text=SD.RoleBrand,Value=SD.RoleBrand},
             };
 
@@ -82,16 +86,35 @@ namespace Vou.Web.Controllers
             var roleList = new List<SelectListItem>()
             {
                 new SelectListItem{Text=SD.RoleAdmin,Value=SD.RoleAdmin},
-                new SelectListItem{Text=SD.RoleUser,Value=SD.RoleUser},
                 new SelectListItem{Text=SD.RoleBrand,Value=SD.RoleBrand},
             };
 
             ViewBag.RoleList = roleList;
             return View(obj);
         }
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync();
+            _tokenProvider.ClearToken();
+            return RedirectToAction("Index", "Home");
+        }
+        private async Task SigninUser(LoginResponeDto model)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(model.Token);
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.NameId,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.NameId).Value));
+
+            identity.AddClaim(new Claim(ClaimTypes.Name,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+
+            var principle = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principle);
         }
     }
 }

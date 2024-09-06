@@ -43,6 +43,7 @@ namespace Vou.Services.AuthAPI.Controllers
                 _responeDto.Message = "Username or password is incorrect";
                 return BadRequest(_responeDto);
             }
+            _responeDto.IsSuccess = true;
             _responeDto.Result = loginRespone;
             _responeDto.Message = "Login successful";
             return Ok(_responeDto);

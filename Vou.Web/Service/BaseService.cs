@@ -22,7 +22,7 @@ namespace Vou.Web.Service
 		{
 			try
 			{
-				HttpClient client = _httpClientFactory.CreateClient("BrandAPI");
+				HttpClient client = _httpClientFactory.CreateClient("VouAPI");
 				HttpRequestMessage message = new();
 				message.Headers.Add("Accept", "application/json");
 				//token
