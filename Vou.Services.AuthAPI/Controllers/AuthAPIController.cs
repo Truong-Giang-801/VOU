@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Vou.Services.AuthAPI.Data;
+using Vou.Services.AuthAPI.Models;
 using Vou.Services.AuthAPI.Models.Dto;
 using Vou.Services.AuthAPI.Service.IService;
 
@@ -12,13 +16,69 @@ namespace Vou.Services.AuthAPI.Controllers
     {
         private readonly IAuthService? _iAuthService;
         protected ResponeDto _responeDto;
-        public AuthAPIController(IAuthService? iAuthService, ResponeDto responeDto)
+        private IMapper _mapper;
+        private readonly AppDbContext _db;
+        public AuthAPIController(IAuthService? iAuthService, ResponeDto responeDto,AppDbContext appDbContext, IMapper mapper)
         {
             _iAuthService = iAuthService;
             _responeDto = responeDto;
+            _mapper = mapper;
+            _db = appDbContext;
+        }
+        [HttpGet("user")]
+        //[Authorize(Roles = "ADMIN")]
+        public ResponeDto Get()
+        {
+            try
+            {
+                IEnumerable<ApplicationUser> objList = _db.ApplicationUsers.ToList();
+                _responeDto.Result = _mapper.Map<IEnumerable<UserDto>>(objList);
+            }
+            catch (Exception ex)
+            {
+                _responeDto.IsSuccess = false;
+                _responeDto.Message = ex.Message;
+            }
+            return _responeDto;
         }
 
-        [HttpPost("register")]
+		[HttpGet("user/{id}")]
+		//		[Authorize(Roles = "ADMIN")]
+		public ResponeDto Get(string id)
+		{
+			try
+			{
+				ApplicationUser objList = _db.ApplicationUsers.First(u => u.Id == id);
+				_responeDto.Result = _mapper.Map<UserDto>(objList);
+			}
+			catch (Exception ex)
+			{
+				_responeDto.IsSuccess = false;
+				_responeDto.Message = ex.Message;
+			}
+			return _responeDto;
+		}
+		[HttpPut("update")]
+//		[Authorize(Roles = "ADMIN")]
+		public ResponeDto Put([FromBody] UserDto userDto)
+		{
+			try
+			{
+				ApplicationUser obj = _mapper.Map<ApplicationUser>(userDto);
+				_db.ApplicationUsers.Add(obj);
+				_db.SaveChanges();
+
+				_responeDto.Result = _mapper.Map<UserDto>(obj);
+			}
+			catch (Exception ex)
+			{
+				_responeDto.IsSuccess = false;
+				_responeDto.Message = ex.Message;
+			}
+			return _responeDto;
+		}
+
+		[HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
         {
             var errorMessage = await _iAuthService.Register(model);

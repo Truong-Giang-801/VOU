@@ -45,13 +45,16 @@ namespace Vou.Services.AuthAPI.Service
             {
                 return new LoginResponeDto() { User = null, Token = "" };
             }
-            var _jwtToken = _jwtTokenGenerator.GenerateToken(user);
+            var role = await _userManager.GetRolesAsync(user);
+            var _jwtToken = _jwtTokenGenerator.GenerateToken(user,role);
             UserDto userDto = new UserDto()
             {
                 Email = user.Email,
                 Id = user.Id,
                 Name = user.Name,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                isActive = true,
+
             };
             var result = new LoginResponeDto()
             {
@@ -69,7 +72,8 @@ namespace Vou.Services.AuthAPI.Service
                 Email = registrationRequestDto.Email,
                 NormalizedEmail = registrationRequestDto.Email.ToUpper(),
                 Name = registrationRequestDto.Name,
-                PhoneNumber = registrationRequestDto.PhoneNumber
+                PhoneNumber = registrationRequestDto.PhoneNumber,
+
             };
 
             try

@@ -8,5 +8,7 @@ namespace Vou.Web.Service.IService
         Task<ResponseDto?> RegisterAsync(RegistrationRequestDto registrationDto);
         Task<ResponseDto?> AssignRoleAsync(RegistrationRequestDto registrationDto);
 
+        Task<ResponseDto?> GetAllUserAsync();
+
     }
 }

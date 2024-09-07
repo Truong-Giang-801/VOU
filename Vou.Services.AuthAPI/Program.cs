@@ -1,5 +1,7 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Vou.Services.AuthAPI;
 using Vou.Services.AuthAPI.Data;
 using Vou.Services.AuthAPI.Models;
 using Vou.Services.AuthAPI.Models.Dto;
@@ -19,6 +21,8 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkS
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ResponeDto>();
 builder.Services.AddScoped<IJwtTokenGenerator , JwtTokenGenerator>();
+IMapper mapper = MappingConfig.RegisterMap().CreateMapper();
+builder.Services.AddSingleton(mapper);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

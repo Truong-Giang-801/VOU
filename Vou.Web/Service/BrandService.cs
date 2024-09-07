@@ -55,7 +55,9 @@ namespace Vou.Web.Service
 			});
 		}
 
-		public async Task<ResponseDto?> GetBrandByIdAsync(int id)
+
+
+        public async Task<ResponseDto?> GetBrandByIdAsync(int id)
 		{
 			return await _baseService.SendAsync(new RequestDto()
 			{

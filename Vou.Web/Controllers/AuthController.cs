@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Vou.Web.Service;
 namespace Vou.Web.Controllers
 {
     public class AuthController : Controller
@@ -25,6 +26,24 @@ namespace Vou.Web.Controllers
         {
             LoginRequestDto loginRequestDto = new ();
             return View(loginRequestDto);   
+        }
+        [HttpGet]
+        public async Task<IActionResult> UserIndex()
+        {
+            List<UserDto>? list = new();
+
+            ResponseDto? response = await _authService.GetAllUserAsync();
+
+            if (response != null && response.IsSuccess == true)
+            {
+                list = JsonConvert.DeserializeObject<List<UserDto>>(Convert.ToString(response.Result));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return View(list);
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestDto obj)
@@ -109,6 +128,10 @@ namespace Vou.Web.Controllers
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.NameId,
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.NameId).Value));
+
+
+            identity.AddClaim(new Claim(ClaimTypes.Role ,
+                jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
 
             identity.AddClaim(new Claim(ClaimTypes.Name,
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));

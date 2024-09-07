@@ -15,7 +15,7 @@ namespace Vou.Services.AuthAPI.Service
         {
             _jwtOption = jwtOption.Value;
         }
-        public string GenerateToken(ApplicationUser applicationUser)
+        public string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_jwtOption.Secret);
@@ -25,6 +25,7 @@ namespace Vou.Services.AuthAPI.Service
                 new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, applicationUser.Id),
             };
+            claimList.AddRange(roles.Select(role=> new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
