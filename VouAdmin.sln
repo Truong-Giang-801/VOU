@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vou.Services.BrandAPI", "Vo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vou.Services.AuthAPI", "Vou.Services.AuthAPI\Vou.Services.AuthAPI.csproj", "{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vou.Services.EventAPI", "Vou.Services.EventAPI\Vou.Services.EventAPI.csproj", "{E1CB56FA-BF9E-4A03-A2F3-00E2EE2E0DAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1CB56FA-BF9E-4A03-A2F3-00E2EE2E0DAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1CB56FA-BF9E-4A03-A2F3-00E2EE2E0DAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1CB56FA-BF9E-4A03-A2F3-00E2EE2E0DAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1CB56FA-BF9E-4A03-A2F3-00E2EE2E0DAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4E61E7AC-B975-4CF4-BCED-28008F049B97} = {B7B3A7CD-0278-4844-8A46-A30C23584386}
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5} = {B7B3A7CD-0278-4844-8A46-A30C23584386}
+		{E1CB56FA-BF9E-4A03-A2F3-00E2EE2E0DAE} = {B7B3A7CD-0278-4844-8A46-A30C23584386}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7779969-6AB6-490A-ABBB-512B562E485A}
