@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Vou.Service.VoucherAPI.props" />
+</Project>

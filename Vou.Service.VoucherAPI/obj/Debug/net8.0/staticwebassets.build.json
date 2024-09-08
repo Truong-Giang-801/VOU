@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "jfE++hFmg5h9h/iCvSyROdsPoW0oqox/c/LtIvtS8HE=",
+  "Source": "Vou.Service.VoucherAPI",
+  "BasePath": "_content/Vou.Service.VoucherAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Vou.Service.VoucherAPI.props" />
+</Project>

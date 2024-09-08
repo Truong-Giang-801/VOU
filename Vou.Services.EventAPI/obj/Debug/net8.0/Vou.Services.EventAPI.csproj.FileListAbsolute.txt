@@ -11,6 +11,9 @@ C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\n
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Humanizer.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -24,6 +27,9 @@ C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\n
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Identity.Client.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
@@ -139,9 +145,3 @@ C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\obj\Debug\n
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\obj\Debug\net8.0\Vou.Services.EventAPI.pdb
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\obj\Debug\net8.0\Vou.Services.EventAPI.genruntimeconfig.cache
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\obj\Debug\net8.0\ref\Vou.Services.EventAPI.dll
-C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
-C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
-C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
-C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
-C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
-C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.EventAPI\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
