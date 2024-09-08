@@ -64,12 +64,33 @@ namespace Vou.Services.AuthAPI.Controllers
 
         [HttpGet("user")]
         //[Authorize(Roles = "ADMIN")]
-        public ResponeDto Get()
+        public async Task<ResponeDto> Get()
         {
             try
             {
-                IEnumerable<ApplicationUser> objList = _db.ApplicationUsers.ToList();
-                _responeDto.Result = _mapper.Map<IEnumerable<UserDto>>(objList);
+                // Fetch all users from the database
+                var users = _db.ApplicationUsers.ToList();
+
+                // Create a list to store the user DTOs
+                var userDtos = new List<UserDto>();
+
+                // Loop through each user and fetch their roles
+                foreach (var user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(user); // Fetch roles for the user
+
+                    // Map the user to the UserDto
+                    var userDto = _mapper.Map<UserDto>(user);
+
+                    // Add the first role (or multiple if needed)
+                    userDto.Role = roles.FirstOrDefault() ?? string.Empty;
+
+                    // Add the UserDto to the list
+                    userDtos.Add(userDto);
+                }
+
+                // Set the result in the response DTO
+                _responeDto.Result = userDtos;
             }
             catch (Exception ex)
             {
@@ -223,16 +244,57 @@ namespace Vou.Services.AuthAPI.Controllers
         [HttpPost("assignRole")]
         public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto registrationRequestDto)
         {
-            var assignRoleSuccessful = await _iAuthService.AssignRole(registrationRequestDto.Email, registrationRequestDto.RoleName.ToUpper());
-            if (!assignRoleSuccessful)
+            try
             {
+                // Step 1: Check if the user exists
+                var user = await _userManager.FindByEmailAsync(registrationRequestDto.Email);
+                if (user == null)
+                {
+                    _responeDto.IsSuccess = false;
+                    _responeDto.Message = "User not found.";
+                    return NotFound(_responeDto);
+                }
+
+                // Step 2: Check if the role name is provided
+                if (string.IsNullOrEmpty(registrationRequestDto.RoleName))
+                {
+                    _responeDto.IsSuccess = false;
+                    _responeDto.Message = "Role name is required.";
+                    return BadRequest(_responeDto);
+                }
+
+                // Step 3: Check if the role exists (if necessary, depending on your setup)
+                var roleExists = await _userManager.IsInRoleAsync(user, registrationRequestDto.RoleName);
+                if (roleExists)
+                {
+                    _responeDto.IsSuccess = false;
+                    _responeDto.Message = "User already has this role.";
+                    return BadRequest(_responeDto);
+                }
+
+                // Step 4: Assign the role to the user
+                var result = await _userManager.AddToRoleAsync(user, registrationRequestDto.RoleName);
+
+                if (result.Succeeded)
+                {
+                    _responeDto.IsSuccess = true;
+                    _responeDto.Message = "Role assigned successfully.";
+                    return Ok(_responeDto);
+                }
+
+                // Handle failures in assigning role
                 _responeDto.IsSuccess = false;
-                _responeDto.Message = "Error encountered while assigning role";
+                _responeDto.Message = "Failed to assign role.";
                 return BadRequest(_responeDto);
             }
-
-            return Ok(_responeDto);
+            catch (Exception ex)
+            {
+                _responeDto.IsSuccess = false;
+                _responeDto.Message = $"An error occurred: {ex.Message}";
+                return StatusCode(500, _responeDto);
+            }
         }
+
 
         [HttpGet("user-brand")]
         //[Authorize(Roles = "ADMIN")]

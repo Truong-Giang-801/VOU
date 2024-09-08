@@ -4,15 +4,25 @@ namespace Vou.Services.AuthAPI.Models.Dto
 {
     public class RegistrationRequestDto
     {
-        [Required]
+
         public string Name { get; set; }
-        [Required]
-        public string Email { get; set; }
-        [Required]
-        public string PhoneNumber { get; set; }
+
+        // At least one of Email or PhoneNumber is required, but both are not mandatory.
+        public string? Email { get; set; }
+
+        public string? PhoneNumber { get; set; }
+
         [Required]
         public string Password { get; set; }
-        [Required]
+
         public string? RoleName { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(PhoneNumber))
+            {
+                yield return new ValidationResult("Either Email or PhoneNumber must be provided.", new[] { nameof(Email), nameof(PhoneNumber) });
+            }
+        }
     }
 }
