@@ -13,10 +13,6 @@
 		<div class="row pb-3">
 			<div class="col-6">
 			</div>
-			<div class="col-6 text-end">
-				<a asp-action="UserCreate" class="btn btn-outline-primary"><i class="bi bi-plus-square"></i> Create New User</a>
-
-			</div>
 		</div>
 		<table class="table">
 			<thead>
@@ -49,12 +45,10 @@
 							@item.PhoneNumber
 						</td>
 						<td>
-							<a asp-action="BrandUpdate" asp-route-Id="@item.Id" class="btn btn-danger">
+							<a asp-action="AssignLockout" asp-route-Id="@item.Id" class="btn btn-danger">
 								<i class="bi bi-pencil"></i>
 							</a>
-							<a asp-action="BrandDelete" asp-route-Id="@item.Id" class="btn btn-danger">
-								<i class="bi bi-trash"></i>
-							</a>
+
 						</td>
 					</tr>
 				}

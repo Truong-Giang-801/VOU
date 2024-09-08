@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{3311EBD6-43D9-43FD-A092-689018C248DC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GateWay", "GateWay", "{D40233D0-C7E7-4F24-83B4-9EC5AAE0C4E4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intergration", "Intergration", "{CF30D2B3-E7F9-440B-91FC-F789DB23C92F}"
@@ -13,9 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{B7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vou.Services.BrandAPI", "Vou.Services.BrandAPI\Vou.Services.BrandAPI.csproj", "{4E61E7AC-B975-4CF4-BCED-28008F049B97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vou.Web", "Vou.Web\Vou.Web.csproj", "{CFBF5521-68D4-46F4-A74C-3E56C77A5B54}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vou.Services.AuthAPI", "Vou.Services.AuthAPI\Vou.Services.AuthAPI.csproj", "{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vou.Services.AuthAPI", "Vou.Services.AuthAPI\Vou.Services.AuthAPI.csproj", "{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +23,6 @@ Global
 		{4E61E7AC-B975-4CF4-BCED-28008F049B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E61E7AC-B975-4CF4-BCED-28008F049B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E61E7AC-B975-4CF4-BCED-28008F049B97}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFBF5521-68D4-46F4-A74C-3E56C77A5B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFBF5521-68D4-46F4-A74C-3E56C77A5B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFBF5521-68D4-46F4-A74C-3E56C77A5B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFBF5521-68D4-46F4-A74C-3E56C77A5B54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,7 +33,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4E61E7AC-B975-4CF4-BCED-28008F049B97} = {B7B3A7CD-0278-4844-8A46-A30C23584386}
-		{CFBF5521-68D4-46F4-A74C-3E56C77A5B54} = {3311EBD6-43D9-43FD-A092-689018C248DC}
 		{7A17DC9D-027D-45E6-832C-A24C09A8A2D5} = {B7B3A7CD-0278-4844-8A46-A30C23584386}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

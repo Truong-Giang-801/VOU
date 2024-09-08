@@ -83,7 +83,7 @@ namespace Vou.Web.Controllers
             if (ModelState.IsValid)
             {
 				DateTime? date = model.DateCreated;
-				Console.WriteLine(date);
+				//Console.WriteLine(date);
                 model.DateUpdated = DateTime.Now;
                 ResponseDto? response = await _BrandService.UpdateBrandAsync(model);
 				model.DateCreated = (DateTime)date;

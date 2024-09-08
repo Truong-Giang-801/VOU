@@ -33,6 +33,6 @@ namespace Vou.Services.BrandAPI.Data
 				Industry = "Cocacola",
 
 			});
-		}
+        }
 	}
 }

@@ -20,7 +20,6 @@ namespace Vou.Services.AuthAPI.Service
             _roleManager = roleManager;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
-
         public async Task<bool> AssignRole(string email, string roleName)
         {
             var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
@@ -39,29 +38,50 @@ namespace Vou.Services.AuthAPI.Service
 
         public async Task<LoginResponeDto> Login(LoginRequestDto loginRequestDto)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(u=>u.UserName.ToLower() == loginRequestDto.Username.ToLower());
-            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
-            if (isValid == false || user == null)
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.Username.ToLower());
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
             {
                 return new LoginResponeDto() { User = null, Token = "" };
             }
-            var role = await _userManager.GetRolesAsync(user);
-            var _jwtToken = _jwtTokenGenerator.GenerateToken(user,role);
-            UserDto userDto = new UserDto()
-            {
-                Email = user.Email,
-                Id = user.Id,
-                Name = user.Name,
-                PhoneNumber = user.PhoneNumber,
-                isActive = true,
 
-            };
-            var result = new LoginResponeDto()
+            var role = await _userManager.GetRolesAsync(user);
+            var jwtToken = _jwtTokenGenerator.GenerateToken(user, role);
+
+            return new LoginResponeDto()
             {
-                User = userDto,
-                Token = _jwtToken,
+                User = new UserDto
+                {
+                    Email = user.Email,
+                    Id = user.Id,
+                    Name = user.Name,
+                    PhoneNumber = user.PhoneNumber,
+                },
+                Token = jwtToken
             };
-              return result;
+        }
+
+        public async Task<LoginResponeDto> LoginByPhoneNumber(LoginRequestDto loginRequestDto)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.PhoneNumber.ToLower() == loginRequestDto.PhoneNumber.ToLower());
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
+            {
+                return new LoginResponeDto() { User = null, Token = "" };
+            }
+
+            var role = await _userManager.GetRolesAsync(user);
+            var jwtToken = _jwtTokenGenerator.GenerateToken(user, role);
+
+            return new LoginResponeDto()
+            {
+                User = new UserDto
+                {
+                    Email = user.Email,
+                    Id = user.Id,
+                    Name = user.Name,
+                    PhoneNumber = user.PhoneNumber,
+                },
+                Token = jwtToken
+            };
         }
 
         public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
@@ -73,7 +93,6 @@ namespace Vou.Services.AuthAPI.Service
                 NormalizedEmail = registrationRequestDto.Email.ToUpper(),
                 Name = registrationRequestDto.Name,
                 PhoneNumber = registrationRequestDto.PhoneNumber,
-
             };
 
             try
@@ -111,7 +130,34 @@ namespace Vou.Services.AuthAPI.Service
                 return $"Error Encountered: {ex.Message}";
             }
         }
+        public async Task<bool> ActivateDeactivateUser(string identifier, bool isActive)
+        {
+            var user = await _userManager.FindByIdAsync(identifier);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(identifier);
+            }
 
+            if (user == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                user.LockoutEnabled = !isActive;
+                user.LockoutEnd = isActive ? null : DateTimeOffset.MaxValue;
+
+                var result = await _userManager.UpdateAsync(user);
+                return result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error activating/deactivating user: {ex.Message}");
+                return false;
+            }
+        }
 
     }
 }

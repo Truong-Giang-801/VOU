@@ -20,7 +20,16 @@ namespace Vou.Web.Service
                 Url = SD.AuthAPIBase + "/api/auth/user"
             });
         }
-        public async Task<ResponseDto?> AssignRoleAsync(RegistrationRequestDto registrationDto)
+
+		public async Task<ResponseDto?> GetUserByIdAsync(string id)
+		{
+			return await _baseService.SendAsync(new RequestDto()
+			{
+				ApiType = Ultility.SD.ApiType.GET,
+				Url = SD.AuthAPIBase + "/api/auth/user/" + id
+			});
+		}
+		public async Task<ResponseDto?> AssignRoleAsync(RegistrationRequestDto registrationDto)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
@@ -29,6 +38,8 @@ namespace Vou.Web.Service
                 Url = SD.AuthAPIBase + "/api/auth/assignRole"
             });
         }
+
+
 
         public async Task<ResponseDto?> LoginAsync(LoginRequestDto loginRequestDto)
         {
@@ -55,7 +66,7 @@ namespace Vou.Web.Service
 			{
 				ApiType = Ultility.SD.ApiType.PUT,
 				Data = userDto,
-				Url = SD.BrandAPIBase + "/api/brand/" + userDto.Id
+				Url = SD.AuthAPIBase + "/api/auth/update" + userDto.Id
 			});
 		}
 	}

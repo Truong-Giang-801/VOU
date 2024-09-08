@@ -48,24 +48,53 @@ namespace Vou.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestDto obj)
         {
-            ResponseDto responseDto = await _authService.LoginAsync(obj);
+            var responseDto = await _authService.LoginAsync(obj);
 
             if (responseDto != null && responseDto.IsSuccess == true)
             {
-                LoginResponeDto loginResponeDto = JsonConvert.DeserializeObject<LoginResponeDto>
-                    (Convert.ToString(responseDto.Result));
-                await SigninUser(loginResponeDto);
-                _tokenProvider.SetToken(loginResponeDto.Token);
-                return RedirectToAction("Index", "Home");
+                var resultJson = Convert.ToString(responseDto.Result);
+                Console.WriteLine("API Response: " + resultJson);
+
+                if (!string.IsNullOrEmpty(resultJson))
+                {
+                    var apiResponse = JsonConvert.DeserializeObject<ResponseDto>(resultJson);
+                    if (apiResponse != null && apiResponse.Result != null)
+                    {
+                        var loginResponeDto = JsonConvert.DeserializeObject<LoginResponeDto>(Convert.ToString(apiResponse.Result));
+                        if (loginResponeDto != null)
+                        {
+                            await SigninUser(loginResponeDto);
+                            _tokenProvider.SetToken(loginResponeDto.Token);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("CustomError", "Invalid login response data");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("CustomError", "Empty login response");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("CustomError", "No result returned from API");
+                }
             }
             else
             {
-                ModelState.AddModelError("CustomError", responseDto.Message);
-                return View(obj);
+                ModelState.AddModelError("CustomError", responseDto?.Message ?? "An error occurred during login");
             }
 
-
+            return View(obj);
         }
+
+
+
+
+
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -81,6 +110,8 @@ namespace Vou.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegistrationRequestDto obj)
         {
+
+
             ResponseDto result = await _authService.RegisterAsync(obj);
             ResponseDto assingRole;
 

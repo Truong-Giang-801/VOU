@@ -13,6 +13,8 @@ namespace Vou.Services.AuthAPI
 			{
 				config.CreateMap<ApplicationUser, UserDto>();
 				config.CreateMap<UserDto, ApplicationUser>();
+				config.CreateMap<UserBrand, UserBrandDto>();
+				config.CreateMap<UserBrandDto, UserBrand>();
 
 			});
 			return mappingConfig;

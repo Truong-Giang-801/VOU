@@ -8,6 +8,6 @@ namespace Vou.Services.AuthAPI.Models.Dto
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public bool isActive { get; set; } = false;
+        public string Lockout { get; set; }
     }
 }

@@ -21,6 +21,8 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkS
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ResponeDto>();
 builder.Services.AddScoped<IJwtTokenGenerator , JwtTokenGenerator>();
+builder.Services.AddScoped<IUserBrandService, UserBrandService>();
+
 IMapper mapper = MappingConfig.RegisterMap().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddControllers();

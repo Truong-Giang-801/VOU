@@ -11,7 +11,6 @@ namespace Vou.Services.BrandAPI.Controllers
 {
 	[Route("api/brand")]
 	[ApiController]
-	[Authorize]
 	public class BrandController : ControllerBase
 	{
 		private readonly AppDbContext _db;
@@ -26,7 +25,6 @@ namespace Vou.Services.BrandAPI.Controllers
 		}
 
 		[HttpGet]
-        [Authorize(Roles = "ADMIN")]
         public ResponeDto Get()
 		{
 			try
@@ -43,7 +41,6 @@ namespace Vou.Services.BrandAPI.Controllers
 		}
 		[HttpGet]
 		[Route("{id:int}")]
-        [Authorize(Roles = "ADMIN")]
         public ResponeDto Get(int id)
 		{
 			try
@@ -60,7 +57,6 @@ namespace Vou.Services.BrandAPI.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Roles = "ADMIN")]
 		public ResponeDto Post([FromBody] BrandDto brandDto)
 		{
 			try
@@ -80,7 +76,6 @@ namespace Vou.Services.BrandAPI.Controllers
 		}
 		[HttpPut]
         [Route("{id:int}")]
-        [Authorize(Roles = "ADMIN")]
         public ResponeDto Put([FromBody] BrandDto brandDto)
 		{
 			try
@@ -101,7 +96,6 @@ namespace Vou.Services.BrandAPI.Controllers
 
 		[HttpDelete]
         [Route("{id:int}")]
-        [Authorize(Roles = "ADMIN")]
         public ResponeDto Delete(int id)
 		{
 			try
