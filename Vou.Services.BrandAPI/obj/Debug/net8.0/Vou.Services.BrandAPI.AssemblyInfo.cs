@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Vou.Services.BrandAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e3b29568a91dc245bf64606c273cee435e315ed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ffa0b279fa444d18b498f762f5b7df62a47ba4e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Vou.Services.BrandAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Vou.Services.BrandAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
