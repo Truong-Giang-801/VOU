@@ -38,26 +38,25 @@ namespace Vou.Services.AuthAPI.Service
                         // Deserialize the response body
                         var errorResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(body);
 
-                        if (errorResponse != null &&
-                            errorResponse.TryGetValue("title", out var titleElement))
+                        // Create a custom response
+                        var response = new ResponeDto
                         {
-                            var title = titleElement.GetString();
+                            IsSuccess = false,
+                            Message = "Vui lòng điền đầy đủ thông tin",
+                            Result = null
+                        };
 
-                            // Create a custom response
-                            var response = new ResponeDto
+                        context.Response.ContentType = "application/json";
+                        // Use a new memory stream to serialize the custom response
+                        using (var newMemoryStream = new MemoryStream())
+                        {
+                            await JsonSerializer.SerializeAsync(newMemoryStream, response, new JsonSerializerOptions
                             {
-                                IsSuccess = false,
-                                Message = "Vui lòng điền đầy đủ thông tin",
-                                Result = null
-                            };
-
-                            context.Response.ContentType = "application/json";
-                            await JsonSerializer.SerializeAsync(context.Response.Body, response);
-                        }
-                        else
-                        {
-                            // If title field is missing, just return the original error response
-                            await context.Response.WriteAsync(body);
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                WriteIndented = true // Optional: for pretty-printing
+                            });
+                            newMemoryStream.Seek(0, SeekOrigin.Begin);
+                            await newMemoryStream.CopyToAsync(originalBodyStream);
                         }
                     }
                     else
@@ -80,7 +79,11 @@ namespace Vou.Services.AuthAPI.Service
                     };
 
                     context.Response.ContentType = "application/json";
-                    await JsonSerializer.SerializeAsync(context.Response.Body, response);
+                    await JsonSerializer.SerializeAsync(originalBodyStream, response, new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = true
+                    });
                 }
             }
         }

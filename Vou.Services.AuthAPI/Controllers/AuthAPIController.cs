@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Vou.Services.AuthAPI.Data;
 using Vou.Services.AuthAPI.Models;
@@ -153,6 +154,61 @@ namespace Vou.Services.AuthAPI.Controllers
                 _responeDto.Message = ex.Message;
             }
             return _responeDto;
+        }
+        [HttpGet("user/phone/{phoneNumber}")]
+        public async Task<ResponeDto> GetByPhoneNumber(string phoneNumber)
+        {
+            var response = new ResponeDto();
+            try
+            {
+                // Retrieve the user by phone number
+                var user = await _db.ApplicationUsers
+                    .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+
+                if (user == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Người dùng không tồn tại";
+                    return response;
+                }
+
+                response.Result = _mapper.Map<UserDto>(user);
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        [HttpGet("user/email/{email}")]
+        public async Task<ResponeDto> GetByEmail(string email)
+        {
+            var response = new ResponeDto();
+            try
+            {
+                // Retrieve the user by email
+                var user = await _db.ApplicationUsers
+                    .FirstOrDefaultAsync(u => u.Email == email);
+
+                if (user == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "User not found.";
+                    return response;
+                }
+
+                response.Result = _mapper.Map<UserDto>(user);
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+            }
+            return response;
         }
 
         [HttpPut("update")]
