@@ -20,21 +20,35 @@ namespace Vou.Services.AuthAPI.Service
             _roleManager = roleManager;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
-        public async Task<bool> AssignRole(string email, string roleName)
+        public async Task<bool> AssignRole(string roleName, string email = null, string phoneNumber = null)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-            if (user != null) 
+            ApplicationUser user = null;
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            }
+            else if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                user = _db.ApplicationUsers.FirstOrDefault(u => u.PhoneNumber == phoneNumber);
+            }
+
+            if (user != null)
             {
                 if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
                 {
-                    //create role if not exist
-                    _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+                    // Create role if it does not exist
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
                 }
-                await _userManager.AddToRoleAsync(user, roleName);
-                return true;
+
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+                return result.Succeeded;
             }
+
             return false;
         }
+
+
         private async Task<string> GetUserRoleAsync(ApplicationUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);

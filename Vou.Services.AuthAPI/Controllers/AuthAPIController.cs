@@ -393,50 +393,35 @@ namespace Vou.Services.AuthAPI.Controllers
         }
 
         [HttpPost("assignRole")]
-        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto registrationRequestDto)
+        public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto assignRoleRequestDto)
         {
             try
             {
-                // Step 1: Check if the user exists
-                var user = await _userManager.FindByEmailAsync(registrationRequestDto.Email);
-                if (user == null)
-                {
-                    _responeDto.IsSuccess = false;
-                    _responeDto.Message = "User not found.";
-                    return NotFound(_responeDto);
-                }
-
-                // Step 2: Check if the role name is provided
-                if (string.IsNullOrEmpty(registrationRequestDto.RoleName))
+                // Check if role name is provided
+                if (string.IsNullOrEmpty(assignRoleRequestDto.RoleName))
                 {
                     _responeDto.IsSuccess = false;
                     _responeDto.Message = "Role name is required.";
                     return BadRequest(_responeDto);
                 }
 
-                // Step 3: Check if the role exists (if necessary, depending on your setup)
-                var roleExists = await _userManager.IsInRoleAsync(user, registrationRequestDto.RoleName);
-                if (roleExists)
-                {
-                    _responeDto.IsSuccess = false;
-                    _responeDto.Message = "User already has this role.";
-                    return BadRequest(_responeDto);
-                }
+                // Assign role based on email or phone number
+                var success = await  _iAuthService.AssignRole(
+                    roleName: assignRoleRequestDto.RoleName,
+                    email: assignRoleRequestDto.Email,
+                    phoneNumber: assignRoleRequestDto.PhoneNumber
+                );
 
-                // Step 4: Assign the role to the user
-                var result = await _userManager.AddToRoleAsync(user, registrationRequestDto.RoleName);
-
-                if (result.Succeeded)
+                if (success)
                 {
                     _responeDto.IsSuccess = true;
                     _responeDto.Message = "Role assigned successfully.";
                     return Ok(_responeDto);
                 }
 
-                // Handle failures in assigning role
                 _responeDto.IsSuccess = false;
-                _responeDto.Message = "Failed to assign role.";
-                return BadRequest(_responeDto);
+                _responeDto.Message = "Failed to assign role. User not found.";
+                return NotFound(_responeDto);
             }
             catch (Exception ex)
             {
@@ -445,6 +430,8 @@ namespace Vou.Services.AuthAPI.Controllers
                 return StatusCode(500, _responeDto);
             }
         }
+
+
 
 
         [HttpGet("user-brand")]
