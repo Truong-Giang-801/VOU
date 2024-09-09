@@ -1,4 +1,5 @@
 import 'package:vou_web/pages/admin_page.dart';
+import 'package:vou_web/pages/brand_page.dart';
 import 'package:vou_web/pages/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AdminPage(),
+      home: LoginPage(),
     );
   }
 }

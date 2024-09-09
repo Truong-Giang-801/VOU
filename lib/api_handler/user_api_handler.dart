@@ -6,6 +6,13 @@ final String baseUri = "https://localhost:7001/api/auth/";
 
 
 
+Future<http.Response> getUserBrandByUserId(String userId) async {
+  final response = await http.get(
+    Uri.parse('https://localhost:7001/api/auth/user-brand/${userId}'),
+  );
+  return response;
+}
+
 Future<http.Response> register({required User user}) async {
   final uri = Uri.parse(baseUri + "register");
   late http.Response response;
@@ -156,7 +163,7 @@ Future<List<User>> getUserData() async {
 Future<User> getUserByEmail({required User user}) async {
   late User data = user;
   final uri = Uri.parse("${baseUri}user/email/${user.email}");
-  try {
+  
     final response = await http.get(
       uri,
       headers: <String, String>{
@@ -164,11 +171,13 @@ Future<User> getUserByEmail({required User user}) async {
       },
     );
     if (response.statusCode >= 200 && response.statusCode <= 299) {
-      data = json.decode(response.body)['result'];
-      return data;
+    final Map<String, dynamic> jsonMap = json.decode(response.body);
+    if (jsonMap['result'] != null) {
+      return User.fromJson(jsonMap['result']);
     }
-  } catch (e) {
-    return data;
-  }
+    }
+   
+    
+  
   return data;
 }

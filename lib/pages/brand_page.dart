@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:vou_web/pages/login_page.dart';
-import 'package:vou_web/pages/manage_account_page.dart';
-import 'package:vou_web/pages/manage_game_page.dart'; // Import ManageGamePage
-import 'package:vou_web/pages/report_page.dart'; // Import ReportPage
+import 'package:vou_web/pages/event_manager_page.dart'; // Import EventManagerPage
+import 'package:vou_web/pages/register_info_page.dart'; // Import RegisterInfoPage
+import 'package:vou_web/pages/login_page.dart'; // Import LoginPage
 
-class AdminPage extends StatelessWidget {
+class BrandPage extends StatelessWidget {
+  final int brandId; // Add brandId parameter
+
+  BrandPage({required this.brandId});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Admin Dashboard',
+          'Brand Dashboard',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -47,7 +50,10 @@ class AdminPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ManageAccountPage()),
+                        builder: (context) => EventManagerPage(
+                          brandID: brandId.toString(), // Pass the brand ID
+                        ),
+                      ),
                     );
                   },
                   child: Container(
@@ -65,11 +71,11 @@ class AdminPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.account_circle,
+                        FaIcon(FontAwesomeIcons.calendarAlt,
                             size: 50, color: Colors.white),
                         SizedBox(height: 16),
                         Text(
-                          "Quản lý Tài khoản",
+                          "Quản lý Sự kiện",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
@@ -87,7 +93,10 @@ class AdminPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ManageGamePage()), // Navigate to ManageGamePage
+                        builder: (context) => RegisterInfoPage(
+                          brandId: brandId, // Pass the brand ID
+                        ),
+                      ),
                     );
                   },
                   child: Container(
@@ -105,51 +114,11 @@ class AdminPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FaIcon(FontAwesomeIcons.gamepad,
+                        FaIcon(FontAwesomeIcons.infoCircle,
                             size: 50, color: Colors.white),
                         SizedBox(height: 16),
                         Text(
-                          "Quản lý Trò chơi",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ReportPage()), // Navigate to ReportPage
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FaIcon(FontAwesomeIcons.chartBar,
-                            size: 50, color: Colors.white),
-                        SizedBox(height: 16),
-                        Text(
-                          "Báo cáo Thống kê",
+                          "Đăng ký Thông tin",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),

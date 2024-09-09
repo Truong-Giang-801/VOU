@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vou_web/pages/admin_page.dart';
+import 'package:vou_web/pages/brand_page.dart';
 import 'package:vou_web/pages/register_page.dart';
-// import 'package:vou_web/pages/forgot_page.dart';
 import 'package:vou_web/class/user.dart';
 import 'package:vou_web/api_handler/user_api_handler.dart';
 import 'dart:convert';
@@ -15,39 +15,83 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   void _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    // Basic validation
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Vui lòng nhập email và mật khẩu')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
     var user = User(
       id: "",
       name: "",
-      password: _passwordController.text,
-      email: _emailController.text,
+      password: password,
+      email: email,
       phoneNumber: "",
-      role: "", // Default role or fetch from form
-      lockout: "", // Default lockout or fetch from form
+      role: "",
+      lockout: "",
     );
-    final response = await login(user: user);
 
-    if (response.statusCode == 200) {
-      user = getUserByEmail(user: user) as User;
-      if (user.role == "ADMIN")
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AdminPage()),
-        );
-      else if (user.role == "BRAND") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LoginPage()), //Replace by BrandPage
+    try {
+      // Perform login
+      final loginResponse = await login(user: user);
+
+      if (loginResponse.statusCode == 200) {
+        // Fetch user details
+        user = await getUserByEmail(user: user);
+
+        if (user.role == "ADMIN") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminPage()),
+          );
+        } else if (user.role == "BRAND") {
+          // Fetch brandId from UserBrand API
+          final userBrandResponse = await getUserBrandByUserId(user.id);
+
+          if (userBrandResponse.statusCode == 200) {
+            final userBrand = jsonDecode(userBrandResponse.body);
+            final brandId = userBrand['brandId'] ?? 0; // Default to 0 if not found
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BrandPage(
+                  brandId: brandId, // Pass the brandId
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Không thể lấy thông tin thương hiệu')),
+            );
+          }
+        }
+      } else {
+        final decodedBody = jsonDecode(loginResponse.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Đăng nhập thất bại: ${decodedBody['message']}')),
         );
       }
-    } else {
-      final decodedBody = jsonDecode(response.body);
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Đăng nhập thất bại: ${decodedBody['message']}')),
+        SnackBar(content: Text('Đã xảy ra lỗi. Vui lòng thử lại.')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -103,34 +147,20 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 16),
-            // Align(
-            //   alignment: Alignment.centerRight,
-            //   child: TextButton(
-            //     onPressed: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) => ForgotPage()),
-            //       );
-            //     },
-            //     child: Text(
-            //       "Quên mật khẩu?",
-            //       style: TextStyle(color: Colors.blue),
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _handleLogin,
+              onPressed: _isLoading ? null : _handleLogin,
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 100, vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: Text(
-                "Đăng nhập",
-                style: TextStyle(fontSize: 18),
-              ),
+              child: _isLoading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text(
+                      "Đăng nhập",
+                      style: TextStyle(fontSize: 18),
+                    ),
             ),
             SizedBox(height: 24),
             Row(
