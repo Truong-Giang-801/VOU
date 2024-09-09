@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vou_web/pages/login_page.dart';
 import 'package:vou_web/pages/manage_account_page.dart';
+import 'package:vou_web/pages/manage_game_page.dart'; // Import ManageGamePage
 
 class AdminPage extends StatelessWidget {
   @override
@@ -82,7 +83,11 @@ class AdminPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () {
-                    // Navigate to Manage Game Page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ManageGamePage()), // Navigate to ManageGamePage
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(
