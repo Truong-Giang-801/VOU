@@ -96,25 +96,32 @@ namespace Vou.Services.AuthAPI.Service
                 return response;
             }
 
+            // Check if user with the same email or phone number already exists
+            var existingUserByEmail = await _userManager.FindByEmailAsync(registrationRequestDto.Email);
+            if (existingUserByEmail != null)
+            {
+                response.IsSuccess = false;
+                response.Message = "User with this email already exists.";
+                return response;
+            }
+
+            var existingUserByPhoneNumber = _db.ApplicationUsers.FirstOrDefault(u => u.PhoneNumber == registrationRequestDto.PhoneNumber);
+            if (existingUserByPhoneNumber != null)
+            {
+                response.IsSuccess = false;
+                response.Message = "User with this phone number already exists.";
+                return response;
+            }
+
             // Create the user object
             ApplicationUser user = new()
             {
                 Name = registrationRequestDto.Name,
-                PhoneNumber = registrationRequestDto.PhoneNumber
+                PhoneNumber = registrationRequestDto.PhoneNumber,
+                UserName = string.IsNullOrEmpty(registrationRequestDto.Email) ? registrationRequestDto.PhoneNumber : registrationRequestDto.Email,
+                Email = registrationRequestDto.Email,
+                NormalizedEmail = registrationRequestDto.Email?.ToUpper()
             };
-
-            // Set email-related properties if email is provided
-            if (!string.IsNullOrEmpty(registrationRequestDto.Email))
-            {
-                user.Email = registrationRequestDto.Email;
-                user.UserName = registrationRequestDto.Email;
-                user.NormalizedEmail = registrationRequestDto.Email.ToUpper();
-            }
-            else
-            {
-                // If email is not provided, use phone number as username
-                user.UserName = registrationRequestDto.PhoneNumber;
-            }
 
             try
             {
@@ -161,8 +168,6 @@ namespace Vou.Services.AuthAPI.Service
                 return response;
             }
         }
-
-
 
 
         public async Task<bool> ActivateDeactivateUser(string identifier, bool isActive)
