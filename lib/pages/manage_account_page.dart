@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vou_web/class/user.dart';
 import 'package:vou_web/api_handler/user_api_handler.dart';
+import 'package:vou_web/pages/add_user_page.dart';
 
 class ManageAccountPage extends StatefulWidget {
   @override
@@ -13,6 +14,10 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
   @override
   void initState() {
     super.initState();
+    _loadUserData();
+  }
+
+  void _loadUserData() {
     _userList = getUserData();
   }
 
@@ -47,8 +52,18 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
-              // Handle add user action
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddUserPage()),
+              );
+              
+              // Check if result is true, indicating that a new user was added
+              if (result == true) {
+                setState(() {
+                  _loadUserData(); // Refresh the user list
+                });
+              }
             },
           ),
         ],
@@ -129,7 +144,7 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
       ),
     );
   }
-
+  
   void deleteUserUI(User user) async {
     try {
       await deleteUser(user: user);

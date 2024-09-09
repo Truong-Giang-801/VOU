@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 
 final String baseUri = "https://localhost:7001/api/auth/";
 
+
+
 Future<http.Response> register({required User user}) async {
   final uri = Uri.parse(baseUri + "register");
   late http.Response response;
@@ -23,6 +25,8 @@ Future<http.Response> register({required User user}) async {
 
   return response;
 }
+
+
 
 Future<http.Response> assignRole({required User user}) async {
   final uri = Uri.parse(baseUri + "assignRole");
@@ -61,6 +65,25 @@ Future<http.Response> login({required User user}) async {
 
   return response;
 }
+
+Future<http.Response> createUser(String username, String email, String phoneNumber, String password, String roleName) async {
+  final uri = Uri.parse('https://localhost:7001/api/auth/adduser');
+  return await http.post(
+    uri,
+    headers: <String, String>{
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+    body: json.encode({
+      "userName": username,
+      "name": username,  // Include 'name' field to match your response
+      "email": email,
+      "phoneNumber": phoneNumber,
+      "password": password,
+      "roleName": roleName
+    }),
+  );
+}
+
 
 Future<http.Response> userDeActivate({required User user}) async {
   final uri = Uri.parse(baseUri + "activate-deactivate");
