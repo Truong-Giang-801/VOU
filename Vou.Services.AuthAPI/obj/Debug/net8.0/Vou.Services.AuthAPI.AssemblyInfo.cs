@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Vou.Services.AuthAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f851476c931b1bc21c84b1e47cca148676a384a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c0dfec59ce7fd608c209921ead9291c7c3a76ff2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Vou.Services.AuthAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Vou.Services.AuthAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

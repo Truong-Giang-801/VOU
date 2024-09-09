@@ -19,6 +19,17 @@ IMapper mapper = MappingConfig.RegisterMap().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddControllers();
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -33,6 +44,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BrandAPI v1"));
 }
+app.UseCors("AllowAnyOrigin");
+
 
 app.UseHttpsRedirection();
 app.MapControllers();

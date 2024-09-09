@@ -30,9 +30,9 @@ builder.Services.AddControllers();
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigins", policy =>
+    options.AddPolicy("AllowAnyOrigin", policy =>
     {
-        policy.WithOrigins("http://localhost:59903") // Add your specific client URL here
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -54,7 +54,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Enable CORS middleware before routing
-app.UseCors("AllowSpecificOrigins");
+app.UseCors("AllowAnyOrigin");
+
 
 app.UseAuthentication();
 app.UseAuthorization();
