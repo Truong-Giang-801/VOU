@@ -24,6 +24,27 @@ public class UserBrandService : IUserBrandService
         return await _context.UserBrand
             .FirstOrDefaultAsync(ub => ub.BrandId == brandId && ub.UserID == userId);
     }
+    public async Task<int?> GetBrandIdByUserIdAsync(string userId)
+    {
+        try
+        {
+            // Query the UserBrand table to find the BrandId associated with the given userId
+            var brandId = await _context.UserBrand
+                .Where(ub => ub.UserID == userId)
+                .Select(ub => ub.BrandId)
+                .FirstOrDefaultAsync();
+
+            return brandId;
+        }
+        catch (Exception ex)
+        {
+            // Log the exception if needed
+            Console.WriteLine($"Error retrieving BrandId by userId: {ex.Message}");
+
+            // Optionally throw or handle the exception as needed
+            throw;
+        }
+    }
 
     public async Task<List<UserBrand>> GetUsersByBrandIdAsync(int brandId)
     {

@@ -595,5 +595,35 @@ namespace Vou.Services.AuthAPI.Controllers
             }
         }
 
+        [HttpGet("brand-id/{userId}")]
+        public async Task<IActionResult> GetBrandIdByUserId(string userId)
+        {
+            try
+            {
+                var brandId = await _userBrandService.GetBrandIdByUserIdAsync(userId);
+                if (brandId == null)
+                {
+                    return NotFound(new ResponeDto
+                    {
+                        IsSuccess = false,
+                        Message = "BrandId not found for the specified user ID."
+                    });
+                }
+
+                return Ok(new ResponeDto
+                {
+                    IsSuccess = true,
+                    Result = brandId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ResponeDto
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                });
+            }
+        }
     }
 }
