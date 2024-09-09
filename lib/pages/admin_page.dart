@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vou_web/pages/login_page.dart';
 import 'package:vou_web/pages/manage_account_page.dart';
 
 class AdminPage extends StatelessWidget {
@@ -19,6 +20,17 @@ class AdminPage extends StatelessWidget {
         foregroundColor: Colors.white, // White text
         centerTitle: true, // Center-align the title
         elevation: 8, // Add shadow effect
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

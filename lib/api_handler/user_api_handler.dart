@@ -105,3 +105,23 @@ Future<List<User>> getUserData() async {
   }
   return data;
 }
+
+Future<User> getUserByEmail({required User user}) async {
+  late User data = user;
+  final uri = Uri.parse("${baseUri}user/email/${user.email}");
+  try {
+    final response = await http.get(
+      uri,
+      headers: <String, String>{
+        'Content-type': 'application/json; charset=UTF-8'
+      },
+    );
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+      data = json.decode(response.body)['result'];
+      return data;
+    }
+  } catch (e) {
+    return data;
+  }
+  return data;
+}

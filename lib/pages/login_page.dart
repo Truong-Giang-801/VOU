@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _handleLogin() async {
-    final user = User(
+    var user = User(
       id: "",
       name: "",
       password: _passwordController.text,
@@ -29,10 +29,19 @@ class _LoginPageState extends State<LoginPage> {
     final response = await login(user: user);
 
     if (response.statusCode == 200) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => AdminPage()),
-      );
+      user = getUserByEmail(user: user) as User;
+      if (user.role == "ADMIN")
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AdminPage()),
+        );
+      else if (user.role == "BRAND") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginPage()), //Replace by BrandPage
+        );
+      }
     } else {
       final decodedBody = jsonDecode(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
