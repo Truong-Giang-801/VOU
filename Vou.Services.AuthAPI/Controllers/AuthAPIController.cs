@@ -253,11 +253,26 @@ namespace Vou.Services.AuthAPI.Controllers
         {
             try
             {
-                ApplicationUser obj = _mapper.Map<ApplicationUser>(userDto);
-                _db.ApplicationUsers.Update(obj); // Updated to Use Update
+                // Find the user by ID
+                var user = _db.ApplicationUsers.Find(userDto.Id);
+                if (user == null)
+                {
+                    _responeDto.IsSuccess = false;
+                    _responeDto.Message = "User not found.";
+                    return _responeDto;
+                }
+
+                // Update properties
+                user.Name = userDto.Name;
+                user.Email = userDto.Email;
+                user.PhoneNumber = userDto.PhoneNumber;
+
+                // Save changes to the database
+                _db.ApplicationUsers.Update(user);
                 _db.SaveChanges();
 
-                _responeDto.Result = _mapper.Map<UserDto>(obj);
+                // Map updated user to UserDto and return
+                _responeDto.Result = _mapper.Map<UserDto>(user);
             }
             catch (Exception ex)
             {
@@ -266,6 +281,7 @@ namespace Vou.Services.AuthAPI.Controllers
             }
             return _responeDto;
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
         {
