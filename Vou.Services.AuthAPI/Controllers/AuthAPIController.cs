@@ -146,39 +146,62 @@ namespace Vou.Services.AuthAPI.Controllers
 
 
         [HttpGet("user/{id}")]
-        //[Authorize(Roles = "ADMIN")]
-        public ResponeDto Get(string id)
+        // [Authorize(Roles = "ADMIN")]
+        public async Task<ResponeDto> Get(string id)
         {
             try
             {
-                ApplicationUser objList = _db.ApplicationUsers.First(u => u.Id == id);
-                _responeDto.Result = _mapper.Map<UserDto>(objList);
+                var user = await _db.ApplicationUsers.FindAsync(id);
+                if (user == null)
+                {
+                    _responeDto.IsSuccess = false;
+                    _responeDto.Message = "User not found.";
+                    return _responeDto;
+                }
+
+                var roles = await _userManager.GetRolesAsync(user);
+                bool isLockedOut = await _userManager.IsLockedOutAsync(user);
+
+                var userDto = _mapper.Map<UserDto>(user);
+                userDto.Role = roles.FirstOrDefault() ?? string.Empty;
+                userDto.Lockout = isLockedOut ? "Locked" : "Activated";
+
+                _responeDto.Result = userDto;
+                _responeDto.IsSuccess = true;
+                _responeDto.Message = "User retrieved successfully.";
             }
             catch (Exception ex)
             {
                 _responeDto.IsSuccess = false;
-                _responeDto.Message = ex.Message;
+                _responeDto.Message = $"An error occurred: {ex.Message}";
             }
             return _responeDto;
         }
+
         [HttpGet("user/phone/{phoneNumber}")]
         public async Task<ResponeDto> GetByPhoneNumber(string phoneNumber)
         {
             var response = new ResponeDto();
             try
             {
-                // Retrieve the user by phone number
                 var user = await _db.ApplicationUsers
                     .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
 
                 if (user == null)
                 {
                     response.IsSuccess = false;
-                    response.Message = "Người dùng không tồn tại";
+                    response.Message = "User not found.";
                     return response;
                 }
 
-                response.Result = _mapper.Map<UserDto>(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                bool isLockedOut = await _userManager.IsLockedOutAsync(user);
+
+                var userDto = _mapper.Map<UserDto>(user);
+                userDto.Role = roles.FirstOrDefault() ?? string.Empty;
+                userDto.Lockout = isLockedOut ? "Locked" : "Activated";
+
+                response.Result = userDto;
                 response.IsSuccess = true;
             }
             catch (Exception ex)
@@ -189,13 +212,13 @@ namespace Vou.Services.AuthAPI.Controllers
             return response;
         }
 
+
         [HttpGet("user/email/{email}")]
         public async Task<ResponeDto> GetByEmail(string email)
         {
             var response = new ResponeDto();
             try
             {
-                // Retrieve the user by email
                 var user = await _db.ApplicationUsers
                     .FirstOrDefaultAsync(u => u.Email == email);
 
@@ -206,7 +229,14 @@ namespace Vou.Services.AuthAPI.Controllers
                     return response;
                 }
 
-                response.Result = _mapper.Map<UserDto>(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                bool isLockedOut = await _userManager.IsLockedOutAsync(user);
+
+                var userDto = _mapper.Map<UserDto>(user);
+                userDto.Role = roles.FirstOrDefault() ?? string.Empty;
+                userDto.Lockout = isLockedOut ? "Locked" : "Activated";
+
+                response.Result = userDto;
                 response.IsSuccess = true;
             }
             catch (Exception ex)
@@ -320,22 +350,24 @@ namespace Vou.Services.AuthAPI.Controllers
                 });
             }
 
-            if (loginRespone.User == null)
+            if (loginRespone.User == null )
             {
+                if (loginRespone.Token == "User is locked")
+                {
+                    return BadRequest(new ResponeDto
+                    {
+                        IsSuccess = false,
+                        Message = "Người dùng chưa được kích hoạt"
+                    });
+                }
+
                 return BadRequest(new ResponeDto
                 {
                     IsSuccess = false,
                     Message = "Thông tin đăng nhập sai"
                 });
             }
-            if (loginRespone.Token == "User is locked")
-            {
-                return BadRequest(new ResponeDto
-                {
-                    IsSuccess = false,
-                    Message = "Người dùng chưa được kích hoạt"
-                });
-            }
+
             return Ok(new ResponeDto
             {
                 IsSuccess = true,
