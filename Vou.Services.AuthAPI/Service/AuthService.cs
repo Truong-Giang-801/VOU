@@ -84,8 +84,10 @@ namespace Vou.Services.AuthAPI.Service
             };
         }
 
-        public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
+        public async Task<ResponeDto> Register(RegistrationRequestDto registrationRequestDto)
         {
+            ResponeDto response = new ResponeDto();
+
             ApplicationUser user = new()
             {
                 UserName = registrationRequestDto.Email,
@@ -100,36 +102,44 @@ namespace Vou.Services.AuthAPI.Service
                 var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
                 if (result.Succeeded)
                 {
-                    // Fetch the user to return (ensure that no exceptions are thrown here)
                     var userToReturn = _db.ApplicationUsers.FirstOrDefault(u => u.UserName == registrationRequestDto.Email);
 
                     if (userToReturn == null)
                     {
-                        return "User creation succeeded, but user could not be retrieved.";
+                        response.IsSuccess = false;
+                        response.Message = "User creation succeeded, but user could not be retrieved.";
+                        return response;
                     }
 
                     UserDto userDto = new()
                     {
                         Email = userToReturn.Email,
-                        Id = userToReturn.Id, // Make sure the Id is convertible to an int
+                        Id = userToReturn.Id,
                         Name = userToReturn.Name,
                         PhoneNumber = userToReturn.PhoneNumber
                     };
 
-                    return ""; // Indicate success
+                    response.IsSuccess = true;
+                    response.Result = userDto;
+                    response.Message = "User created successfully.";
+                    return response;
                 }
                 else
                 {
-                    // Return the first error encountered during user creation
-                    return result.Errors.FirstOrDefault()?.Description ?? "User creation failed for unknown reasons.";
+                    response.IsSuccess = false;
+                    response.Message = result.Errors.FirstOrDefault()?.Description ?? "User creation failed for unknown reasons.";
+                    return response;
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception message or return it for debugging
-                return $"Error Encountered: {ex.Message}";
+                response.IsSuccess = false;
+                response.Message = $"Error Encountered: {ex.Message}";
+                return response;
             }
         }
+
+
         public async Task<bool> ActivateDeactivateUser(string identifier, bool isActive)
         {
             var user = await _userManager.FindByIdAsync(identifier);

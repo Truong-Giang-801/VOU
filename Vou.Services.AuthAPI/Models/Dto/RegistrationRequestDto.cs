@@ -2,9 +2,8 @@
 
 namespace Vou.Services.AuthAPI.Models.Dto
 {
-    public class RegistrationRequestDto
+    public class RegistrationRequestDto : IValidatableObject
     {
-
         public string Name { get; set; }
 
         // At least one of Email or PhoneNumber is required, but both are not mandatory.
@@ -12,11 +11,12 @@ namespace Vou.Services.AuthAPI.Models.Dto
 
         public string? PhoneNumber { get; set; }
 
-        [Required]
+ //       [Required(ErrorMessage = "The Password field is required.")]
         public string Password { get; set; }
 
         public string? RoleName { get; set; }
 
+        // Custom validation to ensure either Email or PhoneNumber is provided
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(PhoneNumber))

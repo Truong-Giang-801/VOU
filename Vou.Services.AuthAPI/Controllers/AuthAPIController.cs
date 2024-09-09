@@ -173,22 +173,38 @@ namespace Vou.Services.AuthAPI.Controllers
             }
             return _responeDto;
         }
-
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
         {
-            var errorMessage = await _iAuthService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (!ModelState.IsValid)
             {
-                _responeDto.IsSuccess = false;
-                _responeDto.Message = errorMessage;
-                return BadRequest(_responeDto);
+                // Collect all validation errors
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+
+                var response = new ResponeDto
+                {
+                    IsSuccess = false,
+                    Message = "Validation failed.",
+                    Result = errors // Returning the list of errors
+                };
+
+                return BadRequest(response);
             }
 
-            _responeDto.IsSuccess = true;
-            _responeDto.Message = "Registration successful";
-            return Ok(_responeDto);
+            var result = await _iAuthService.Register(model);
+
+            if (result.IsSuccess == false)
+            {
+                return BadRequest(result);  // Return custom error message
+            }
+
+            return Ok(result);  // Success case
         }
+
+
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
