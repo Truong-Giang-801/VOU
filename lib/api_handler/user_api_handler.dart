@@ -99,7 +99,31 @@ Future<http.Response> userDeActivate({required User user}) async {
 
   return response;
 }
+Future<http.Response> updateUser({required User user}) async {
+  final url = Uri.parse('https://localhost:7001/api/auth/update'); // Replace with your API endpoint
+  final headers = {
+    'Content-Type': 'application/json',
+    // Replace with your auth token if needed
+  };
 
+  final body = json.encode({
+    'id': user.id,
+    'name': user.name,
+    'email': user.email,
+    'phoneNumber': user.phoneNumber,
+    'password': user.password,
+    'role': user.role,
+    'lockout': user.lockout,
+  });
+
+  final response = await http.put(
+    url,
+    headers: headers,
+    body: body,
+  );
+
+  return response;
+}
 Future<http.Response> deleteUser({required User user}) async {
   final uri = Uri.parse(baseUri + "user/" + user.id);
   late http.Response response;

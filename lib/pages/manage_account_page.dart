@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vou_web/class/user.dart';
 import 'package:vou_web/api_handler/user_api_handler.dart';
 import 'package:vou_web/pages/add_user_page.dart';
-
+import 'package:vou_web/pages/edit_user_page.dart';
 class ManageAccountPage extends StatefulWidget {
   @override
   _ManageAccountPageState createState() => _ManageAccountPageState();
@@ -121,7 +121,16 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
                         ),
                         IconButton(
                           icon: Icon(Icons.edit),
-                          onPressed: () {
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EditUserPage(user: user)),
+                                  );
+ 
+                                    setState(() {
+                                      _loadUserData(); // Refresh the user list
+                                    });
+                                  
                             // Handle edit user action
                           },
                         ),
