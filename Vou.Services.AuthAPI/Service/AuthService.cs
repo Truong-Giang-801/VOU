@@ -111,12 +111,16 @@ namespace Vou.Services.AuthAPI.Service
             }
 
             // Check if user with the same email or phone number already exists
-            var existingUserByEmail = await _userManager.FindByEmailAsync(registrationRequestDto.Email);
-            if (existingUserByEmail != null)
+            ApplicationUser existingUserByEmail = null;
+            if (!string.IsNullOrEmpty(registrationRequestDto.Email))
             {
-                response.IsSuccess = false;
-                response.Message = "User with this email already exists.";
-                return response;
+                existingUserByEmail = await _userManager.FindByEmailAsync(registrationRequestDto.Email);
+                if (existingUserByEmail != null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "User with this email already exists.";
+                    return response;
+                }
             }
 
             var existingUserByPhoneNumber = _db.ApplicationUsers.FirstOrDefault(u => u.PhoneNumber == registrationRequestDto.PhoneNumber);
@@ -182,6 +186,7 @@ namespace Vou.Services.AuthAPI.Service
                 return response;
             }
         }
+
 
 
 
