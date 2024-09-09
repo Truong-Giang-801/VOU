@@ -299,6 +299,7 @@ namespace Vou.Services.AuthAPI.Controllers
 
             LoginResponeDto loginRespone;
 
+
             // Check if Username is provided and perform login by username
             if (!string.IsNullOrEmpty(loginRequestDto.Username))
             {
@@ -311,13 +312,21 @@ namespace Vou.Services.AuthAPI.Controllers
             }
             else
             {
+
                 return BadRequest(new ResponeDto
                 {
                     IsSuccess = false,
                     Message = "Thông tin đăng nhập không hợp lệ"
                 });
             }
-
+            if (loginRespone.Token == "User is locked")
+            {
+                return BadRequest(new ResponeDto
+                {
+                    IsSuccess = false,
+                    Message = "Người dùng chưa được kích hoạt"
+                });
+            }
             if (loginRespone.User == null)
             {
                 return BadRequest(new ResponeDto

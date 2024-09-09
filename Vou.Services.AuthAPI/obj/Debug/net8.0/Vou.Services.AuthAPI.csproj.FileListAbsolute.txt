@@ -292,3 +292,10 @@ C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\obj\Debug\ne
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\obj\Debug\net8.0\Vou.Services.AuthAPI.pdb
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\obj\Debug\net8.0\Vou.Services.AuthAPI.genruntimeconfig.cache
 C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\obj\Debug\net8.0\ref\Vou.Services.AuthAPI.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\System.Web.Mvc.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\System.Web.Razor.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\System.Web.Helpers.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\System.Web.WebPages.Deployment.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\System.Web.WebPages.Razor.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\System.Web.WebPages.dll
+C:\Users\giang\OneDrive\Desktop\Admin\VouAdmin\Vou.Services.AuthAPI\bin\Debug\net8.0\Microsoft.Web.Infrastructure.dll

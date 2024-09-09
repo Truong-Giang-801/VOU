@@ -26,38 +26,38 @@ namespace Vou.Services.AuthAPI.Service
                 {
                     // Call the next delegate/middleware in the pipeline
                     await _next(context);
-
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    var body = new StreamReader(memoryStream).ReadToEnd();
+                    context.Response.Body = originalBodyStream;
                     // If the response is a 400 error (validation failure)
-                    if (context.Response.StatusCode == StatusCodes.Status400BadRequest)
+                    if (context.Response.StatusCode == StatusCodes.Status400BadRequest && !string.IsNullOrEmpty(body) && body.Contains("required", StringComparison.OrdinalIgnoreCase))
                     {
                         // Set the response body back to the original stream
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        var body = new StreamReader(memoryStream).ReadToEnd();
-                        context.Response.Body = originalBodyStream;
 
-                        // Deserialize the response body
-                        var errorResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(body);
 
-                        // Create a custom response
-                        var response = new ResponeDto
-                        {
-                            IsSuccess = false,
-                            Message = "Vui lòng điền đầy đủ thông tin",
-                            Result = null
-                        };
-
-                        context.Response.ContentType = "application/json";
-                        // Use a new memory stream to serialize the custom response
-                        using (var newMemoryStream = new MemoryStream())
-                        {
-                            await JsonSerializer.SerializeAsync(newMemoryStream, response, new JsonSerializerOptions
+                        // Check if the response body contains a "required" field error
+                       
+                            // Create a custom response for missing fields
+                            var response = new ResponeDto
                             {
-                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                WriteIndented = true // Optional: for pretty-printing
-                            });
-                            newMemoryStream.Seek(0, SeekOrigin.Begin);
-                            await newMemoryStream.CopyToAsync(originalBodyStream);
-                        }
+                                IsSuccess = false,
+                                Message = "Vui lòng điền đầy đủ các trường bắt buộc.",
+                                Result = null
+                            };
+
+                            context.Response.ContentType = "application/json";
+                            // Use a new memory stream to serialize the custom response
+                            using (var newMemoryStream = new MemoryStream())
+                            {
+                                await JsonSerializer.SerializeAsync(newMemoryStream, response, new JsonSerializerOptions
+                                {
+                                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                    WriteIndented = true // Optional: for pretty-printing
+                                });
+                                newMemoryStream.Seek(0, SeekOrigin.Begin);
+                                await newMemoryStream.CopyToAsync(originalBodyStream);
+                            }
+                        
                     }
                     else
                     {
@@ -87,5 +87,6 @@ namespace Vou.Services.AuthAPI.Service
                 }
             }
         }
+
     }
 }

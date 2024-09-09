@@ -43,9 +43,11 @@ namespace Vou.Services.AuthAPI.Service
         public async Task<LoginResponeDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.Username.ToLower());
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
+
+            // Check if the user exists and if their lockout status is "Activated"
+            if (user == null || user.LockoutEnabled != false || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
             {
-                return new LoginResponeDto() { User = null, Token = "" };
+                return new LoginResponeDto() { User = null, Token = "User is locked" };
             }
 
             var role = await _userManager.GetRolesAsync(user);
@@ -59,10 +61,13 @@ namespace Vou.Services.AuthAPI.Service
                     Id = user.Id,
                     Name = user.Name,
                     PhoneNumber = user.PhoneNumber,
+                    Lockout = user.LockoutEnabled ? "Locked" : "Activated",
+                    Role = role.FirstOrDefault() // Assuming the user has one role
                 },
                 Token = jwtToken
             };
         }
+
 
         public async Task<LoginResponeDto> LoginByPhoneNumber(LoginRequestDto loginRequestDto)
         {
@@ -71,7 +76,10 @@ namespace Vou.Services.AuthAPI.Service
             {
                 return new LoginResponeDto() { User = null, Token = "" };
             }
-
+            if (user == null || user.LockoutEnabled != false || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
+            {
+                return new LoginResponeDto() { User = null, Token = "User is locked" };
+            }
             var role = await _userManager.GetRolesAsync(user);
             var jwtToken = _jwtTokenGenerator.GenerateToken(user, role);
 
@@ -83,6 +91,8 @@ namespace Vou.Services.AuthAPI.Service
                     Id = user.Id,
                     Name = user.Name,
                     PhoneNumber = user.PhoneNumber,
+                    Lockout = user.LockoutEnabled ? "Locked" : "Activated",
+                    Role = role.FirstOrDefault() // Assuming the user has one role
                 },
                 Token = jwtToken
             };
