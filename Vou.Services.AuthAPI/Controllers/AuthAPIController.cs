@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using Vou.Services.AuthAPI.Data;
 using Vou.Services.AuthAPI.Models;
 using Vou.Services.AuthAPI.Models.Dto;
@@ -176,32 +177,46 @@ namespace Vou.Services.AuthAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
         {
-            if (!ModelState.IsValid)
+            var response = new ResponeDto();
+
+            // Manually validate the model
+            var validationResults = new List<ValidationResult>();
+            var validationContext = new ValidationContext(model);
+            bool isValid = Validator.TryValidateObject(model, validationContext, validationResults, true);
+
+            if (!isValid)
             {
                 // Collect all validation errors
-                var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                              .Select(e => e.ErrorMessage)
-                                              .ToList();
+                var errors = validationResults.Select(vr => vr.ErrorMessage).ToList();
 
-                var response = new ResponeDto
-                {
-                    IsSuccess = false,
-                    Message = "Validation failed.",
-                    Result = errors // Returning the list of errors
-                };
+                response.IsSuccess = false;
+                response.Message = "Validation failed.";
+                response.Result = errors; // Return the list of errors
 
                 return BadRequest(response);
             }
 
+            // Proceed with registration
             var result = await _iAuthService.Register(model);
 
             if (result.IsSuccess == false)
             {
-                return BadRequest(result);  // Return custom error message
+                // Return the error result from the registration service
+                response.IsSuccess = false;
+                response.Message = result.Message;
+                response.Result = result.Result; // This can include details about the error
+
+                return BadRequest(response); // Return custom error message
             }
 
-            return Ok(result);  // Success case
+            // Success case
+            response.IsSuccess = true;
+            response.Message = "Registration successful";
+            response.Result = result.Result; // Return the success result
+
+            return Ok(response);
         }
+
 
 
 

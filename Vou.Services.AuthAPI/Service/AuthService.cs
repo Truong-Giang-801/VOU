@@ -87,28 +87,33 @@ namespace Vou.Services.AuthAPI.Service
         public async Task<ResponeDto> Register(RegistrationRequestDto registrationRequestDto)
         {
             ResponeDto response = new ResponeDto();
+
+            // Check if either email or phone number is provided
+            if (string.IsNullOrEmpty(registrationRequestDto.Email) && string.IsNullOrEmpty(registrationRequestDto.PhoneNumber))
+            {
+                response.IsSuccess = false;
+                response.Message = "Either Email or PhoneNumber must be provided.";
+                return response;
+            }
+
+            // Create the user object
             ApplicationUser user = new()
             {
-                Name = registrationRequestDto.Name
+                Name = registrationRequestDto.Name,
+                PhoneNumber = registrationRequestDto.PhoneNumber
             };
 
-            // Assign either email or phone number as the UserName and other fields
+            // Set email-related properties if email is provided
             if (!string.IsNullOrEmpty(registrationRequestDto.Email))
             {
                 user.Email = registrationRequestDto.Email;
                 user.UserName = registrationRequestDto.Email;
                 user.NormalizedEmail = registrationRequestDto.Email.ToUpper();
             }
-
-            if (!string.IsNullOrEmpty(registrationRequestDto.PhoneNumber))
+            else
             {
-                user.PhoneNumber = registrationRequestDto.PhoneNumber;
-
-                // If the email is not provided, use the phone number as the username
-                if (string.IsNullOrEmpty(user.UserName))
-                {
-                    user.UserName = registrationRequestDto.PhoneNumber;
-                }
+                // If email is not provided, use phone number as username
+                user.UserName = registrationRequestDto.PhoneNumber;
             }
 
             try
@@ -118,8 +123,7 @@ namespace Vou.Services.AuthAPI.Service
 
                 if (result.Succeeded)
                 {
-                    var userToReturn = _db.ApplicationUsers.FirstOrDefault(u =>
-                        u.UserName == user.UserName); // Search by UserName, which is now either email or phone number
+                    var userToReturn = _db.ApplicationUsers.FirstOrDefault(u => u.UserName == user.UserName);
 
                     if (userToReturn == null)
                     {
@@ -143,8 +147,10 @@ namespace Vou.Services.AuthAPI.Service
                 }
                 else
                 {
+                    // Return specific error messages
+                    var errorMessage = result.Errors.FirstOrDefault()?.Description ?? "User creation failed for unknown reasons.";
                     response.IsSuccess = false;
-                    response.Message = result.Errors.FirstOrDefault()?.Description ?? "User creation failed for unknown reasons.";
+                    response.Message = errorMessage;
                     return response;
                 }
             }
@@ -155,6 +161,7 @@ namespace Vou.Services.AuthAPI.Service
                 return response;
             }
         }
+
 
 
 
