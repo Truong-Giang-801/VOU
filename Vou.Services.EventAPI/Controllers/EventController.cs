@@ -112,5 +112,22 @@ namespace Vou.Services.EventAPI.Controllers
 			}
 			return _responeDto;
 		}
-	}
+        [HttpGet]
+        [Route("brand/{brandId:int}")]
+        public ResponeDto GetByBrandId(int brandId)
+        {
+            try
+            {
+                IEnumerable<Event> objList = _db.Event.Where(e => e.BrandId == brandId).ToList();
+                _responeDto.Result = _mapper.Map<IEnumerable<EventDto>>(objList);
+            }
+            catch (Exception ex)
+            {
+                _responeDto.IsSuccess = false;
+                _responeDto.Message = ex.Message;
+            }
+            return _responeDto;
+        }
+
+    }
 }

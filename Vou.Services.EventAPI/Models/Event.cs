@@ -7,6 +7,7 @@ namespace Vou.Services.EventAPI.Models
 		[Key]
 		public int Id { get; set; }
 		[Required]
+		public int BrandId	{ get; set; }
 		public string Name { get; set; } = string.Empty;
 		[Required]
 		public string Img { get; set; } = string.Empty;

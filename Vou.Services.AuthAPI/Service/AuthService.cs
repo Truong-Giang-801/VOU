@@ -59,7 +59,7 @@ namespace Vou.Services.AuthAPI.Service
             var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.Username.ToLower());
 
             // Check if the user exists and if their lockout status is "Activated"
-            if (user == null || user.LockoutEnabled != false )
+            if (user == null && user.LockoutEnabled != false )
             {
                 return new LoginResponeDto() { User = null, Token = "User is locked" };
             }

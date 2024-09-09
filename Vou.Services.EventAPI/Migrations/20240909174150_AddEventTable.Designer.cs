@@ -12,8 +12,8 @@ using Vou.Services.EventAPI.Data;
 namespace Vou.Services.EventAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240908094800_CreateEventTable")]
-    partial class CreateEventTable
+    [Migration("20240909174150_AddEventTable")]
+    partial class AddEventTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace Vou.Services.EventAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -58,6 +61,7 @@ namespace Vou.Services.EventAPI.Migrations
                         new
                         {
                             Id = 1,
+                            BrandId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Img = "123123",
@@ -67,6 +71,7 @@ namespace Vou.Services.EventAPI.Migrations
                         new
                         {
                             Id = 2,
+                            BrandId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Img = "123123",

@@ -20,6 +20,7 @@ namespace Vou.Services.EventAPI.Data
 			modelBuilder.Entity<Event>().HasData(new Event
 			{
 				Id = 1,
+				BrandId = 1,
 				Name = "Event 1",
 				Img = "123123",
 				NumberOfVoucher = 1,
@@ -28,6 +29,7 @@ namespace Vou.Services.EventAPI.Data
 			modelBuilder.Entity<Event>().HasData(new Event
 			{
 				Id = 2,
+				BrandId = 1,
 				Name = "Event 2",
                 Img = "123123",
                 NumberOfVoucher = 1,

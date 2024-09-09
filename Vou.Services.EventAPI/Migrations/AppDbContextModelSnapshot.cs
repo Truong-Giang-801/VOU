@@ -30,6 +30,9 @@ namespace Vou.Services.EventAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -55,6 +58,7 @@ namespace Vou.Services.EventAPI.Migrations
                         new
                         {
                             Id = 1,
+                            BrandId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Img = "123123",
@@ -64,6 +68,7 @@ namespace Vou.Services.EventAPI.Migrations
                         new
                         {
                             Id = 2,
+                            BrandId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Img = "123123",

@@ -39,6 +39,13 @@ namespace Vou.Services.VoucherAPI.Controllers
             await _voucher.ReplaceOneAsync(filter, voucher);
             return Ok(voucher);
         }
+
+        [HttpGet("event/{eventId:int}")]
+        public async Task<IEnumerable<Voucher>> GetByEventId(int eventId)
+        {
+            var filter = Builders<Voucher>.Filter.Eq(x => x.EventId, eventId);
+            return await _voucher.Find(filter).ToListAsync();
+        }
         [HttpDelete("{id}")]
 
         public async Task<ActionResult> Delete(int id)
