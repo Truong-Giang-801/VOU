@@ -216,7 +216,7 @@ namespace Vou.Services.AuthAPI.Controllers
                 return BadRequest(new ResponeDto
                 {
                     IsSuccess = false,
-                    Message = "Username or phone number is required"
+                    Message = "Vui lòng điền đủ các trường"
                 });
             }
 
@@ -237,7 +237,7 @@ namespace Vou.Services.AuthAPI.Controllers
                 return BadRequest(new ResponeDto
                 {
                     IsSuccess = false,
-                    Message = "Invalid login details"
+                    Message = "Thông tin đăng nhập không hợp lệ"
                 });
             }
 
@@ -246,7 +246,7 @@ namespace Vou.Services.AuthAPI.Controllers
                 return BadRequest(new ResponeDto
                 {
                     IsSuccess = false,
-                    Message = "Username or phone number or password is incorrect"
+                    Message = "Thông tin đăng nhập sai"
                 });
             }
 
@@ -254,7 +254,7 @@ namespace Vou.Services.AuthAPI.Controllers
             {
                 IsSuccess = true,
                 Result = loginRespone,
-                Message = "Login successful"
+                Message = "Đăng nhập thành công"
             });
         }
 
