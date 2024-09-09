@@ -432,5 +432,55 @@ namespace Vou.Services.AuthAPI.Controllers
                 });
             }
         }
+
+        [HttpDelete("user/{id}")]
+        //[Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            try
+            {
+                // Find the user by ID
+                var user = await _userManager.FindByIdAsync(id);
+
+                if (user == null)
+                {
+                    return NotFound(new ResponeDto
+                    {
+                        IsSuccess = false,
+                        Message = "User not found."
+                    });
+                }
+
+                // Delete the user
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return Ok(new ResponeDto
+                    {
+                        IsSuccess = true,
+                        Message = "User deleted successfully."
+                    });
+                }
+                else
+                {
+                    return BadRequest(new ResponeDto
+                    {
+                        IsSuccess = false,
+                        Message = "Failed to delete user. Please check logs for details."
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting user: {ex.Message}");
+                return StatusCode(500, new ResponeDto
+                {
+                    IsSuccess = false,
+                    Message = "An unexpected error occurred while deleting the user."
+                });
+            }
+        }
+
     }
 }
