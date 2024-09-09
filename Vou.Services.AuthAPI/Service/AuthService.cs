@@ -87,22 +87,39 @@ namespace Vou.Services.AuthAPI.Service
         public async Task<ResponeDto> Register(RegistrationRequestDto registrationRequestDto)
         {
             ResponeDto response = new ResponeDto();
-
             ApplicationUser user = new()
             {
-                UserName = registrationRequestDto.Email,
-                Email = registrationRequestDto.Email,
-                NormalizedEmail = registrationRequestDto.Email.ToUpper(),
-                Name = registrationRequestDto.Name,
-                PhoneNumber = registrationRequestDto.PhoneNumber,
+                Name = registrationRequestDto.Name
             };
+
+            // Assign either email or phone number as the UserName and other fields
+            if (!string.IsNullOrEmpty(registrationRequestDto.Email))
+            {
+                user.Email = registrationRequestDto.Email;
+                user.UserName = registrationRequestDto.Email;
+                user.NormalizedEmail = registrationRequestDto.Email.ToUpper();
+            }
+
+            if (!string.IsNullOrEmpty(registrationRequestDto.PhoneNumber))
+            {
+                user.PhoneNumber = registrationRequestDto.PhoneNumber;
+
+                // If the email is not provided, use the phone number as the username
+                if (string.IsNullOrEmpty(user.UserName))
+                {
+                    user.UserName = registrationRequestDto.PhoneNumber;
+                }
+            }
 
             try
             {
+                // Try to create the user
                 var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
+
                 if (result.Succeeded)
                 {
-                    var userToReturn = _db.ApplicationUsers.FirstOrDefault(u => u.UserName == registrationRequestDto.Email);
+                    var userToReturn = _db.ApplicationUsers.FirstOrDefault(u =>
+                        u.UserName == user.UserName); // Search by UserName, which is now either email or phone number
 
                     if (userToReturn == null)
                     {
@@ -138,6 +155,7 @@ namespace Vou.Services.AuthAPI.Service
                 return response;
             }
         }
+
 
 
         public async Task<bool> ActivateDeactivateUser(string identifier, bool isActive)
