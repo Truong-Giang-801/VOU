@@ -473,6 +473,75 @@ namespace Vou.Services.AuthAPI.Controllers
                 });
             }
         }
+        [HttpPost("adduser")]
+        public async Task<IActionResult> AddUser([FromBody] CreateUserDto createUserDto)
+        {
+            var response = new ResponeDto();
+
+            // Manually validate the model
+            var validationResults = new List<ValidationResult>();
+            var validationContext = new ValidationContext(createUserDto);
+            bool isValid = Validator.TryValidateObject(createUserDto, validationContext, validationResults, true);
+
+            if (!isValid)
+            {
+                var errors = validationResults.Select(vr => vr.ErrorMessage).ToList();
+                response.IsSuccess = false;
+                response.Message = "Validation failed.";
+                response.Result = errors;
+                return BadRequest(response);
+            }
+
+            try
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = createUserDto.UserName,
+                    Email = createUserDto.Email,
+                    PhoneNumber = createUserDto.PhoneNumber,
+                    // Assuming Name is mapped to UserName as per the user requirement
+                    Name = createUserDto.UserName
+                };
+
+                var result = await _userManager.CreateAsync(user, createUserDto.Password);
+
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(createUserDto.RoleName))
+                    {
+                        await _userManager.AddToRoleAsync(user, createUserDto.RoleName);
+                    }
+
+                    var userDto = new UserDto
+                    {
+                        Id = user.Id,
+                        Name = user.UserName,  // or user.Name if you use that property
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        Lockout = user.LockoutEnabled.ToString(), // Adjust as needed
+                        Role = createUserDto.RoleName // Or fetch from user roles if needed
+                    };
+
+                    response.IsSuccess = true;
+                    response.Message = "User created successfully.";
+                    response.Result = userDto;
+                    return Ok(response);
+                }
+
+                response.IsSuccess = false;
+                response.Message = "Failed to create user.";
+                response.Result = result.Errors.Select(e => e.Description).ToList();
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = $"An error occurred: {ex.Message}";
+                return StatusCode(500, response);
+            }
+        }
+
+
 
         [HttpDelete("user/{id}")]
         //[Authorize(Roles = "ADMIN")]
