@@ -55,11 +55,10 @@ app.UseHttpsRedirection();
 
 // Enable CORS middleware before routing
 app.UseCors("AllowSpecificOrigins");
-app.UseMiddleware<ValidationMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<ValidationMiddleware>();
 app.MapControllers();
 ApplyMigration();
 app.Run();

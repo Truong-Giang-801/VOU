@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Vou.Service.VoucherAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+afb5fc76c918c325273d9784737a826bd880f925")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e599643b94dce73b7f94fa561341622676aa9eab")]
 [assembly: System.Reflection.AssemblyProductAttribute("Vou.Service.VoucherAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Vou.Service.VoucherAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
