@@ -319,14 +319,7 @@ namespace Vou.Services.AuthAPI.Controllers
                     Message = "Thông tin đăng nhập không hợp lệ"
                 });
             }
-            if (loginRespone.Token == "User is locked")
-            {
-                return BadRequest(new ResponeDto
-                {
-                    IsSuccess = false,
-                    Message = "Người dùng chưa được kích hoạt"
-                });
-            }
+
             if (loginRespone.User == null)
             {
                 return BadRequest(new ResponeDto
@@ -335,7 +328,14 @@ namespace Vou.Services.AuthAPI.Controllers
                     Message = "Thông tin đăng nhập sai"
                 });
             }
-
+            if (loginRespone.Token == "User is locked")
+            {
+                return BadRequest(new ResponeDto
+                {
+                    IsSuccess = false,
+                    Message = "Người dùng chưa được kích hoạt"
+                });
+            }
             return Ok(new ResponeDto
             {
                 IsSuccess = true,
