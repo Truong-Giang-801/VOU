@@ -76,10 +76,11 @@ namespace Vou.Services.AuthAPI.Controllers
                 // Create a list to store the user DTOs
                 var userDtos = new List<UserDto>();
 
-                // Loop through each user and fetch their roles
+                // Loop through each user and fetch their roles and lockout status
                 foreach (var user in users)
                 {
                     var roles = await _userManager.GetRolesAsync(user); // Fetch roles for the user
+                    bool isLockedOut = await _userManager.IsLockedOutAsync(user); // Fetch lockout status
 
                     // Map the user to the UserDto
                     var userDto = _mapper.Map<UserDto>(user);
@@ -87,45 +88,47 @@ namespace Vou.Services.AuthAPI.Controllers
                     // Add the first role (or multiple if needed)
                     userDto.Role = roles.FirstOrDefault() ?? string.Empty;
 
+                    // Set the lockout status
+                    userDto.Lockout = isLockedOut ? "Locked" : "Activated";
+
                     // Add the UserDto to the list
                     userDtos.Add(userDto);
                 }
 
                 // Set the result in the response DTO
                 _responeDto.Result = userDtos;
+                _responeDto.IsSuccess = true;
+                _responeDto.Message = "Users retrieved successfully.";
             }
             catch (Exception ex)
             {
                 _responeDto.IsSuccess = false;
-                _responeDto.Message = ex.Message;
+                _responeDto.Message = $"An error occurred: {ex.Message}";
             }
             return _responeDto;
         }
 
-        [HttpPost("activate-deactivate")]
+
+        // Example usage in controller
+        [HttpPut("activate-deactivate")]
         public async Task<IActionResult> ActivateDeactivateUser([FromBody] ActivateDeactivateUserDto dto)
         {
             try
             {
-                bool success = await _iAuthService.ActivateDeactivateUser(dto.Identifier, dto.IsActive);
+                var userDto = await _iAuthService.ActivateDeactivateUser(dto.Identifier, dto.IsActive);
 
-                if (success)
+                if (userDto == null)
                 {
-                    var userStatus = dto.IsActive ? "activated" : "deactivated";
-                    return Ok(new
-                    {
-                        Message = $"User {userStatus} successfully.",
-                        IsActive = dto.IsActive
-                    });
+                    return BadRequest(new { Message = "Failed to activate/deactivate user." });
                 }
-                else
+
+                var userStatus = dto.IsActive ? "activated" : "deactivated";
+                return Ok(new
                 {
-                    return BadRequest(new
-                    {
-                        Message = "Failed to activate/deactivate user.",
-                        Details = "Please contact support if the problem persists."
-                    });
-                }
+                    Message = $"User {userStatus} successfully.",
+                    IsActive = dto.IsActive,
+                    User = userDto
+                });
             }
             catch (Exception ex)
             {
@@ -138,6 +141,9 @@ namespace Vou.Services.AuthAPI.Controllers
                 });
             }
         }
+
+
+
 
         [HttpGet("user/{id}")]
         //[Authorize(Roles = "ADMIN")]

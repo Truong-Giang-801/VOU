@@ -35,7 +35,11 @@ namespace Vou.Services.AuthAPI.Service
             }
             return false;
         }
-
+        private async Task<string> GetUserRoleAsync(ApplicationUser user)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles.FirstOrDefault() ?? string.Empty;
+        }
         public async Task<LoginResponeDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.Username.ToLower());
@@ -170,17 +174,15 @@ namespace Vou.Services.AuthAPI.Service
         }
 
 
+
         public async Task<bool> ActivateDeactivateUser(string identifier, bool isActive)
         {
-            var user = await _userManager.FindByIdAsync(identifier);
-            if (user == null)
-            {
-                user = await _userManager.FindByEmailAsync(identifier);
-            }
+            var user = await _userManager.FindByIdAsync(identifier) ?? await _userManager.FindByEmailAsync(identifier);
 
             if (user == null)
             {
-                return false;
+                Console.WriteLine($"User not found with identifier: {identifier}");
+                return false; // User not found
             }
 
             try
@@ -189,15 +191,27 @@ namespace Vou.Services.AuthAPI.Service
                 user.LockoutEnd = isActive ? null : DateTimeOffset.MaxValue;
 
                 var result = await _userManager.UpdateAsync(user);
-                return result.Succeeded;
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine($"Failed to update user lockout status: {string.Join(", ", result.Errors)}");
+                    return false; // Update failed
+                }
+
+                await _userManager.UpdateSecurityStampAsync(user); // Ensure security stamp is updated
+
+                Console.WriteLine($"User activation status updated successfully. Current status: {(isActive ? "Active" : "Inactive")}");
+
+                return true;
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.WriteLine($"Error activating/deactivating user: {ex.Message}");
                 return false;
             }
         }
+
+
+
 
     }
 }

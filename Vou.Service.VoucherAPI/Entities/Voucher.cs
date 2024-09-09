@@ -8,6 +8,8 @@ namespace Vou.Services.VoucherAPI.Models
         [BsonId]
         [BsonElement("_id"),BsonRepresentation(BsonType.Int32)]
         public int Id { get; set; }
+        [BsonElement("_brand_id"), BsonRepresentation(BsonType.Int32)]
+        public int BrandId { get; set; }
         [BsonElement("_code"), BsonRepresentation(BsonType.String)]
         public string Code { get; set; } = string.Empty;
         [BsonElement("_qrCode"), BsonRepresentation(BsonType.String)]
