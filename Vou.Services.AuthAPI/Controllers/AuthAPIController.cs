@@ -594,6 +594,51 @@ namespace Vou.Services.AuthAPI.Controllers
                 });
             }
         }
+        [HttpPost("user-brand")]
+        public async Task<IActionResult> CreateUserBrand([FromBody] UserBrandDto userBrandDto)
+        {
+            var response = new ResponeDto();
+
+            // Manually validate the model
+            var validationResults = new List<ValidationResult>();
+            var validationContext = new ValidationContext(userBrandDto);
+            bool isValid = Validator.TryValidateObject(userBrandDto, validationContext, validationResults, true);
+
+            if (!isValid)
+            {
+                var errors = validationResults.Select(vr => vr.ErrorMessage).ToList();
+                response.IsSuccess = false;
+                response.Message = "Validation failed.";
+                response.Result = errors;
+                return BadRequest(response);
+            }
+
+            try
+            {
+                // Create a new UserBrand entity
+                var userBrand = new UserBrand
+                {
+                    BrandId = userBrandDto.BrandId,
+                    UserID = userBrandDto.UserID
+                };
+
+                // Add the new UserBrand to the database
+                _db.UserBrand.Add(userBrand);
+                await _db.SaveChangesAsync();
+
+                response.IsSuccess = true;
+                response.Message = "User-brand association created successfully.";
+                response.Result = userBrandDto; // Return the created UserBrandDto or a confirmation message
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = $"An error occurred: {ex.Message}";
+                return StatusCode(500, response);
+            }
+        }
+
 
         [HttpGet("brand-id/{userId}")]
         public async Task<IActionResult> GetBrandIdByUserId(string userId)
