@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vou.Services.EventAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEventTable : Migration
+    public partial class AddEventable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,6 +20,7 @@ namespace Vou.Services.EventAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BrandId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Img = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumberOfVoucher = table.Column<int>(type: "int", nullable: false),
@@ -33,11 +34,11 @@ namespace Vou.Services.EventAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Event",
-                columns: new[] { "Id", "BrandId", "DateCreated", "DateUpdated", "Img", "Name", "NumberOfVoucher" },
+                columns: new[] { "Id", "BrandId", "DateCreated", "DateUpdated", "GameId", "Img", "Name", "NumberOfVoucher" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "123123", "Event 1", 1 },
-                    { 2, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "123123", "Event 2", 1 }
+                    { 1, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "123123", "Event 1", 1 },
+                    { 2, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "123123", "Event 2", 1 }
                 });
         }
 

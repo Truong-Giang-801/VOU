@@ -21,6 +21,7 @@ namespace Vou.Services.EventAPI.Data
 			{
 				Id = 1,
 				BrandId = 1,
+				GameId = 1,
 				Name = "Event 1",
 				Img = "123123",
 				NumberOfVoucher = 1,
@@ -30,6 +31,7 @@ namespace Vou.Services.EventAPI.Data
 			{
 				Id = 2,
 				BrandId = 1,
+				GameId= 1,
 				Name = "Event 2",
                 Img = "123123",
                 NumberOfVoucher = 1,

@@ -12,8 +12,8 @@ using Vou.Services.EventAPI.Data;
 namespace Vou.Services.EventAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240909174150_AddEventTable")]
-    partial class AddEventTable
+    [Migration("20240910002859_AddEventable")]
+    partial class AddEventable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace Vou.Services.EventAPI.Migrations
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Img")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -64,6 +67,7 @@ namespace Vou.Services.EventAPI.Migrations
                             BrandId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 1,
                             Img = "123123",
                             Name = "Event 1",
                             NumberOfVoucher = 1
@@ -74,6 +78,7 @@ namespace Vou.Services.EventAPI.Migrations
                             BrandId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 1,
                             Img = "123123",
                             Name = "Event 2",
                             NumberOfVoucher = 1
