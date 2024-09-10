@@ -19,6 +19,9 @@ namespace Vou.Services.VoucherAPI.Models
         [BsonElement("_description"), BsonRepresentation(BsonType.String)]
 
         public string Description { get; set; } = string.Empty;
+        [BsonElement("_type"), BsonRepresentation(BsonType.String)]
+
+        public string Type{ get; set; } = string.Empty;
         [BsonElement("_value"), BsonRepresentation(BsonType.Int32)]
         public int Value { get; set; }
         [BsonElement("_state"), BsonRepresentation(BsonType.Boolean)]
