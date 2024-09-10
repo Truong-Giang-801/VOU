@@ -6,13 +6,27 @@ final String baseUri = "https://localhost:7001/api/auth/";
 
 
 
-Future<http.Response> getUserBrandByUserId(String userId) async {
-  final response = await http.get(
-    Uri.parse('https://localhost:7001/api/auth/user-brand/${userId}'),
-  );
-  return response;
-}
+Future<int> getBrandIdByUserId(String userId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('https://localhost:7001/api/auth/brand-id/$userId'),
+    );
 
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print("respone data for getBrandIdByUserId");
+      print(responseData);
+      // Assuming the response body contains the brandId directly
+      return responseData['result'] as int;
+    } else {
+      print('Failed to load brand ID: ${response.reasonPhrase}');
+      return 0;
+    }
+  } catch (error) {
+    print('Error fetching brand ID: $error');
+    return 0;
+  }
+}
 Future<http.Response> register({required User user}) async {
   final uri = Uri.parse(baseUri + "register");
   late http.Response response;
@@ -176,8 +190,6 @@ Future<User> getUserByEmail({required User user}) async {
       return User.fromJson(jsonMap['result']);
     }
     }
-   
-    
-  
+
   return data;
 }

@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:vou_web/api_handler/user_api_handler.dart'; // Adjust the import path as necessary
 import 'package:vou_web/class/event.dart'; // Import your Event model
-import 'package:vou_web/api_handler/event_api_handler.dart'; // Import your API handler
+import 'package:vou_web/api_handler/event_api_handler.dart'; // Adjust the import path as necessary
 
 class EventManagerPage extends StatefulWidget {
-  final String brandID; // Pass the brandID from the logged-in user
-  EventManagerPage({required this.brandID});
+  final String userId;
+
+  EventManagerPage({required this.userId});
 
   @override
   _EventManagerPageState createState() => _EventManagerPageState();
@@ -13,6 +16,7 @@ class EventManagerPage extends StatefulWidget {
 class _EventManagerPageState extends State<EventManagerPage> {
   List<Event> _events = [];
   bool _isLoading = true;
+  late int _brandID;
 
   @override
   void initState() {
@@ -20,18 +24,46 @@ class _EventManagerPageState extends State<EventManagerPage> {
     _fetchEvents();
   }
 
-  // Fetch events by brandID
   Future<void> _fetchEvents() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      _events = await getEventsByBrandID(widget.brandID);
+      _brandID = await getBrandIdByUserId(widget.userId);
+      print('Brand ID: $_brandID');
+
+      if (_brandID != 0) {
+        final response = await getEventsByBrandID(_brandID);
+
+        if (response.statusCode == 200) {
+          final List<dynamic> responseData = json.decode(response.body)['result'];
+          setState(() {
+            _events = responseData.map((json) => Event.fromJson(json)).toList();
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error fetching events: ${response.reasonPhrase}')),
+          );
+          setState(() {
+            _events = [];
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Brand ID not found for user.')),
+        );
+        setState(() {
+          _events = [];
+        });
+      }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error fetching events: $error')),
       );
+      setState(() {
+        _events = [];
+      });
     }
 
     setState(() {
@@ -39,41 +71,58 @@ class _EventManagerPageState extends State<EventManagerPage> {
     });
   }
 
-  // Add new event
   void _addEvent() {
     showDialog(
       context: context,
       builder: (context) {
         return EventFormDialog(
+          brandId: _brandID,
           onSave: (event) async {
-            await addEvent(event);
-            _fetchEvents(); // Refresh the list after adding
+            final success = await addEvent(event);
+            if (success) {
+              _fetchEvents(); // Refresh the list after adding
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to add event')),
+              );
+            }
           },
         );
       },
     );
   }
 
-  // Edit event
   void _editEvent(Event event) {
     showDialog(
       context: context,
       builder: (context) {
         return EventFormDialog(
+          brandId: event.brandId,
           event: event,
           onSave: (updatedEvent) async {
-            await updateEvent(updatedEvent);
-            _fetchEvents(); // Refresh the list after updating
+            final success = await updateEvent(updatedEvent);
+            if (success) {
+              _fetchEvents(); // Refresh the list after updating
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to update event')),
+              );
+            }
           },
         );
       },
     );
   }
 
-  // Delete event
   Future<void> _deleteEvent(int id) async {
-    await deleteEvent(id);
-    _fetchEvents(); // Refresh the list after deleting
+    final success = await deleteEvent(id);
+    if (success) {
+      _fetchEvents(); // Refresh the list after deleting
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete event')),
+      );
+    }
   }
 
   @override
@@ -124,9 +173,10 @@ class _EventManagerPageState extends State<EventManagerPage> {
 
 class EventFormDialog extends StatefulWidget {
   final Event? event;
+  final int brandId;
   final Function(Event) onSave;
 
-  EventFormDialog({this.event, required this.onSave});
+  EventFormDialog({this.event, required this.brandId, required this.onSave});
 
   @override
   _EventFormDialogState createState() => _EventFormDialogState();
@@ -136,6 +186,7 @@ class _EventFormDialogState extends State<EventFormDialog> {
   late TextEditingController _nameController;
   late TextEditingController _imgController;
   late TextEditingController _voucherController;
+  late TextEditingController _gameIdController;
 
   @override
   void initState() {
@@ -143,16 +194,19 @@ class _EventFormDialogState extends State<EventFormDialog> {
     _nameController = TextEditingController(text: widget.event?.name ?? '');
     _imgController = TextEditingController(text: widget.event?.img ?? '');
     _voucherController = TextEditingController(text: widget.event?.numberOfVoucher.toString() ?? '0');
+    _gameIdController = TextEditingController(text: widget.event?.gameId.toString() ?? '0');
   }
 
   void _saveEvent() {
     final name = _nameController.text;
     final img = _imgController.text;
     final vouchers = int.tryParse(_voucherController.text) ?? 0;
+    final gameId = int.tryParse(_gameIdController.text) ?? 0;
 
     final newEvent = Event(
       id: widget.event?.id ?? 0,
-      brandId: widget.event?.brandId ?? 0, // Pass brand ID
+      brandId: widget.brandId, // Use brandId passed to the dialog
+      gameId: gameId,
       name: name,
       img: img,
       numberOfVoucher: vouchers,
@@ -182,6 +236,11 @@ class _EventFormDialogState extends State<EventFormDialog> {
           TextField(
             controller: _voucherController,
             decoration: InputDecoration(labelText: 'Number of Vouchers'),
+            keyboardType: TextInputType.number,
+          ),
+          TextField(
+            controller: _gameIdController,
+            decoration: InputDecoration(labelText: 'Game ID'),
             keyboardType: TextInputType.number,
           ),
         ],

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'event_manager_page.dart'; // Import the EventManagerPage
 
 class RegisterInfoPage extends StatefulWidget {
-  final int brandId; // Pass the brand ID here
+  final String userId; // Expect userId here
 
-  RegisterInfoPage({required this.brandId});
+  RegisterInfoPage({required this.userId});
 
   @override
   _RegisterInfoPageState createState() => _RegisterInfoPageState();
@@ -18,41 +19,117 @@ class _RegisterInfoPageState extends State<RegisterInfoPage> {
   final _industryController = TextEditingController();
   final _addressController = TextEditingController();
 
-  Future<void> _submitForm() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final name = _nameController.text;
-      final gps = _gpsController.text;
-      final industry = _industryController.text;
-      final address = _addressController.text;
+  Future<int?> _registerBrand() async {
+    final url = 'https://localhost:7002/api/brand'; // Replace with your API endpoint
 
-      final url = 'https://localhost:7002/api/brand'; // Replace with your API endpoint
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'Name': _nameController.text,
+        'GPS': _gpsController.text,
+        'Industry': _industryController.text,
+        'Address': _addressController.text,
+      }),
+    );
 
+    final responseData = json.decode(response.body);
+
+    // Check the structure of the responseData
+    print('RegisterBrand Response: $responseData');
+
+    if (response.statusCode == 200 && responseData['isSuccess']) {
+      // Ensure the 'id' field is present and valid
+      return responseData['result']['id'];
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to Register Brand Information: ${responseData['message']}')),
+      );
+      return null;
+    }
+  }
+
+  Future<void> _assignUserToBrand(int brandId) async {
+    final url = 'https://localhost:7001/api/auth/user-brand'; // Replace with your API endpoint
+
+    try {
       final response = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'Id': widget.brandId, // Include the brand ID
-          'Name': name,
-          'GPS': gps,
-          'Industry': industry,
-          'Address': address, // Include address if your API expects it
+          'brandId': brandId,
+          'userID': widget.userId,
         }),
       );
 
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       final responseData = json.decode(response.body);
 
-      if (response.statusCode == 200 && responseData['isSuccess']) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Information Registered')),
-        );
-        // Navigate to another page or update the UI
+      if (response.statusCode == 200) {
+        if (responseData['isSuccess']) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('User successfully assigned to brand')),
+          );
+
+          // Navigate to EventManagerPage after successful assignment
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventManagerPage(
+                userId: widget.userId,
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to assign user to brand: ${responseData['message']}')),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to Register Information')),
+          SnackBar(content: Text('Error assigning user to brand')),
         );
       }
+    } catch (error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unexpected error occurred: $error')),
+      );
+    }
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        // Attempt to register the brand
+        final brandId = await _registerBrand();
+        print('Registered brand ID: $brandId'); // Debug print
+
+        if (brandId != null) {
+          // Assign user to the registered brand
+          await _assignUserToBrand(brandId);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to get a valid brand ID')),
+          );
+        }
+      } catch (error) {
+        // Handle unexpected errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An unexpected error occurred: $error')),
+        );
+      }
+    } else {
+      // If form validation fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fix the errors in the form')),
+      );
     }
   }
 

@@ -5,9 +5,9 @@ import 'package:vou_web/pages/register_info_page.dart'; // Import RegisterInfoPa
 import 'package:vou_web/pages/login_page.dart'; // Import LoginPage
 
 class BrandPage extends StatelessWidget {
-  final int brandId; // Add brandId parameter
+  final String userId; // Use String for userId
 
-  BrandPage({required this.brandId});
+  BrandPage({required this.userId}); // Constructor expects userId
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class BrandPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => EventManagerPage(
-                          brandID: brandId.toString(), // Pass the brand ID
+                          userId: userId, // Pass userId here
                         ),
                       ),
                     );
@@ -94,7 +94,7 @@ class BrandPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => RegisterInfoPage(
-                          brandId: brandId, // Pass the brand ID
+                          userId: userId, // Pass userId here as String
                         ),
                       ),
                     );

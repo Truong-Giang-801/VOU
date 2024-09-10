@@ -1,6 +1,7 @@
 class Event {
   final int id;
-  final int brandId;
+  final int brandId; // Ensure this is present
+  final int gameId;
   final String name;
   final String img;
   final int numberOfVoucher;
@@ -9,7 +10,8 @@ class Event {
 
   Event({
     required this.id,
-    required this.brandId,
+    required this.brandId, // Ensure this is set correctly
+    required this.gameId,
     required this.name,
     required this.img,
     required this.numberOfVoucher,
@@ -21,6 +23,7 @@ class Event {
     return Event(
       id: json['id'],
       brandId: json['brandId'],
+      gameId: json['gameId'],
       name: json['name'],
       img: json['img'],
       numberOfVoucher: json['numberOfVoucher'],
@@ -32,7 +35,8 @@ class Event {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'brandId': brandId,
+      'brandId': brandId, // Ensure this is included
+      'gameId': gameId,
       'name': name,
       'img': img,
       'numberOfVoucher': numberOfVoucher,

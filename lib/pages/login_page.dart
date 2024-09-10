@@ -57,26 +57,15 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => AdminPage()),
           );
         } else if (user.role == "BRAND") {
-          // Fetch brandId from UserBrand API
-          final userBrandResponse = await getUserBrandByUserId(user.id);
-
-          if (userBrandResponse.statusCode == 200) {
-            final userBrand = jsonDecode(userBrandResponse.body);
-            final brandId = userBrand['brandId'] ?? 0; // Default to 0 if not found
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BrandPage(
-                  brandId: brandId, // Pass the brandId
-                ),
+          // Directly pass the user.id to BrandPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BrandPage(
+                userId: user.id, // Pass the user ID
               ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Không thể lấy thông tin thương hiệu')),
-            );
-          }
+            ),
+          );
         }
       } else {
         final decodedBody = jsonDecode(loginResponse.body);

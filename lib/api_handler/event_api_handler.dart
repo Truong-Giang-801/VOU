@@ -5,16 +5,16 @@ import 'package:vou_web/class/event.dart'; // Event class
 const String baseUrl = 'https://localhost:7003/api/Event'; // Replace with your actual API URL
 
 // Get all events by brandId
-Future<List<Event>> getEventsByBrandID(String brandID) async {
+Future<http.Response> getEventsByBrandID(int brandID) async {
   final response = await http.get(Uri.parse('$baseUrl/brand/$brandID'));
 
   if (response.statusCode == 200) {
-    List<dynamic> body = jsonDecode(response.body)['result'];
-    return body.map((dynamic item) => Event.fromJson(item)).toList();
+    return response; // Return the full response
   } else {
     throw Exception('Failed to load events');
   }
 }
+
 
 // Add new event
 Future<bool> addEvent(Event event) async {
